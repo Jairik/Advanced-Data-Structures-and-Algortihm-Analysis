@@ -12,7 +12,7 @@ Leiserson, Rivest, and Stein */
 //Allows communication via the standard output
 #include <iostream>
 //Allows output to a file
-#include <ostream>
+#include <ftream>
 //Timing with Chrono and randomly generating integers
 #include <cstdlib>
 #include <ctime>
@@ -40,7 +40,17 @@ void logTime(ofstream);
 
 
 int main() {
-    int numOfArrays; //Number of arrays to iterate through
+    int *currentArray; //Will hold the current array of random integers
+    int numArrays; //The number of arrays to be sorted
+    ofstream outputFile("SortTimes.csv"); //Open the file to output the data into
+    cout << "Welcome to JJ's Sort Timer Program!" << endl; //Introduction message
+    numArrays = getNumArrays(); //Get the number of arrays and assign to numArrays
+    int arraySizes[numArrays] = getSizes(numArrays); //Hold the size of each array
+
+    //Iterate through each sorting algortihm
+    for(int i = 0; i < numArrays; i++) {
+        
+    } 
     
 }
 
