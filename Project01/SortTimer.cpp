@@ -12,7 +12,7 @@ Leiserson, Rivest, and Stein */
 //Allows communication via the standard output
 #include <iostream>
 //Allows output to a file
-#include <ftream>
+#include <fstream>
 //Timing with Chrono and randomly generating integers
 #include <cstdlib>
 #include <ctime>
@@ -22,6 +22,7 @@ Leiserson, Rivest, and Stein */
 
 
 using namespace std;
+using namespace chrono;
 
 /* Function Prototype */
 //Retrieving and validating input for the number of arrays to be tested
@@ -31,25 +32,25 @@ via an int pointer */
 int *getSizes(int);
 //Return a pointer to an array of randomly generated integers, given size and bounds
 int *getRandomArray(int, int);
-//Start the chrono timer
-void startTimer();
-//Stop the chrono timer and return time elasped
-double endTimer();
+//Start the chrono timer and return the start time
+auto startTimer();
+//Stop the chrono timer and return time elasped, given start as parameter
+auto endTimer(double);
 //Helper function to clean up and simplify main, write the given output to the ofstream
 void logTime(ofstream);
 
 
 int main() {
     int *currentArray; //Will hold the current array of random integers
-    int numArrays; //The number of arrays to be sorted
     ofstream outputFile("SortTimes.csv"); //Open the file to output the data into
     cout << "Welcome to JJ's Sort Timer Program!" << endl; //Introduction message
-    numArrays = getNumArrays(); //Get the number of arrays and assign to numArrays
-    int arraySizes[numArrays] = getSizes(numArrays); //Hold the size of each array
+    int numArrays = getNumArrays(); //Get the number of arrays and assign to numArrays
+    int *arraySizes = getSizes(numArrays); //Hold the size of each array
 
     //Iterate through each sorting algortihm
     for(int i = 0; i < numArrays; i++) {
-        
+        currentArray = getRandomArray(arraySizes[i]);
+        /* Call and time each function, exporting the result to a csv file */
     } 
     
 }
@@ -92,32 +93,32 @@ int *getSizes(int numOfArrays) {
 }
 
 
-int *getRandomArray(int size, int bounds) {
+int *getRandomArray(int size) {
     int *randArr = new int[size];
     srand(time(0)); //Seed the random number generator
     //Create an array with bounds, with '0' being a signal value
-    if(bounds == 0) { 
-        for(int i = 0; i < size; i++) {
-            *(randArr+i) = rand();
-        }
-    }
-    //Create an array with no bounds
-    else { 
-        for(int i = 0; i < size; i++) {
-            *(randArr+i) = rand()%(bounds+1);
-        }
+    for(int i = 0; i < size; i++) {
+        *(randArr+i) = rand();
     }
     return randArr;    
 }
 
 
-void startTimer() {
-
+auto startTimer() {
+    auto start = chrono::high_resolution_clock::now();
+    return start;
 }
 
 
-double endTimer() {
-    double timeElasped = 0;
-    //some logic for timing here
-    return timeElasped;
+auto endTimer(double start) {
+    auto end = chrono:high_resolution_clock::now();
+    auto timeElasped = chrono::duration_cast<chrono::microseconds>(end-start);
+    return (timeElasped*1000000); //convert to seconds
+}
+
+//Given an array, will apply bounds to it (change the numbers so it only falls within 0 and the bound)
+int *applyBounds(int *array, int arraySize, int bounds) {
+    for(int i = 0; i < arraySize; i++) {
+        array[i] = array[i]%(bounds);
+    }
 }
