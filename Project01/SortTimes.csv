@@ -1,0 +1,6 @@
+Merge Sort,Quick Sort,Comb Sort,Shell Sort,Heap Sort,Algorithm Library Sort,Radix Sort (Radix=10),Radix Sort (Radix=100),Radix Sort (Radix=1000),Radix Sort (Radix=10000),Radix Sort (Radix=10 & Max=1000),Radix Sort (Radix=100 & Max=1000),Radix Sort (Radix=100 & Max=1000),Radix Sort (Radix=10000 & Max=1000),Count Sort,Count Sort (Max=1000),Bucket Sort
+1000,179000000,
+2000,386000000,
+3000,559000000,
+4000,736000000,
+5000,779000000,

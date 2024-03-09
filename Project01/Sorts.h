@@ -6,6 +6,7 @@ Description: Set of standard sorting routines.
 Notes: Algorithms and code were taken from either
 Data Structures and Algorithms in C++ by Adam Drozdek or
 Introduction to Algorithms Fourth Edition by Cormen, Leiserson, Rivest, and Stein
+Modified slightly by JJ McCauley for compatibility
 */
 
 #ifndef SORTS_H_
@@ -34,9 +35,9 @@ template <class T> void moveDown(T data[], int first, int last);
 template <class T> void heapsort(T data[], const int n);
 // T needs to be an integer type for radix and count.
 template <class T> void radixsort(T data[], const int n, const int radix);
-template <class T> void countsort(T *A, long sz);
+template <class T> void countsort(T A[], long sz);
 // T needs to be a float type for bucket.
-template <class T> void BucketSort(T *A, long sz, long buckets);
+template <class T> void BucketSort(T A[], long sz, long buckets);
 
 /*
 Description: Determines if the array is sorted.
@@ -66,6 +67,7 @@ template <class T> void bubble(T A[], int size) {
       }
     }
   }
+  return A;
 }
 
 /*
@@ -386,9 +388,8 @@ template <class T> void countsort(T *A, long sz) {
 /*
 Description: Sorts the array using the standard bucket sort.
 Parameters: Array A and the size of the array.
-Return: None
-Notes: This is for floating point data only in the range [0, 1).
-*/
+Return: Type T sorted array
+Notes: This is for floating point data only in the range [0, 1). */
 template <class T> void BucketSort(T *A, long sz) {
   //	deque<T> *Buckets = new deque<T> [sz];
   vector<T> *Buckets = new vector<T>[sz];
