@@ -23,17 +23,8 @@ Leiserson, Rivest, and Stein */
 using namespace std;
 using namespace chrono;
 
-/* Function Pointers to sort to the different functions, cleaning up main function */
-//Function Ptr for all sorts but radix and bucket sort
+/* Function Pointer to sort to the different functions, cleaning up main function */
 using sortPtr = void(*)(int *, int); //Pass in the array and size
-//Function Ptr for Radix Sort (takes in extra int parameter)
-using radixPtr = void(*)(int *, int, int);
-//Function Ptr for Bucket Sort (takes in extra long parameter)
-using bucketPtr = void(*)(int *, int, long);
-//Function Ptr for Count Sort (takes in long as size)
-using countPtr = void(*)(int *, long);
-
-
 
 /* Function Prototypes */
 //Retrieving and validating input for the number of arrays to be tested
@@ -51,16 +42,14 @@ chrono::time_point<std::chrono::high_resolution_clock> startTimer();
 long endTimer(chrono::time_point<std::chrono::high_resolution_clock>);
 //Will time the given function and output the time to the outfile
 void logTime(int *, int, ofstream &, sortPtr);
-//Overloaded for sort() from algorithm library
-void logTime(int *, int, ofstream &, sortPtr);
+//Time the sort for the sorting method from the algorithm library
+void logTimeAlgSort(int *, int, ofstream &);
 //Overloaded for radix sort
-void logTime(int *, int, ofstream &, radixPtr, int);
+void logTimeRadix(int *, int, ofstream &, int);
 //Overloaded for bucket sort
-void logTime(int *, int, ofstream &, bucketPtr, long);
-//Overloaded for algoritghms sort method
-void logTime(int *, int, ofstream &);
+void logTimeBucket(float *, long, ofstream &);
 //Overloaded for count sort
-void logTime(int *, long, ofstream &, countPtr);
+void logTimeCount(int *, long, ofstream &, int);
 
 
 int main() {
@@ -72,39 +61,44 @@ int main() {
 
     ofstream outFile("SortTimes.csv"); //Open the file to output the data into
     if(!outFile.is_open()) {
-        cerr << "Error - could not open file" << endl;
+        cout << "Error - could not open file" << endl;
     }
     //Print the headers for the output file
     outFile << ",Merge Sort,Quick Sort,Comb Sort,Shell Sort,Heap Sort,Algorithm Library Sort,Radix Sort (Radix=10)";
     outFile << ",Radix Sort (Radix=100),Radix Sort (Radix=1000),Radix Sort (Radix=10000),Count Sort,Bucket Sort,";
     outFile << "Radix Sort (Radix=10 & Max=1000),Radix Sort (Radix=100 & Max=1000),Radix Sort (Radix=100 & Max=1000),";
     outFile << "Radix Sort (Radix=10000 & Max=1000),Count Sort (Max=1000)";
-
+    cout << "Sorting now..." << endl;
     //Iterate through each sorting algorthim
     for(int i = 0; i < numArrays; i++) {
+        cout << "inside for loop, iteration " << i << endl;
         size = arraySizes[i];
         outFile << "\n" << size << ",";
-        int *array = getRandomArray(arraySizes[i]);
+        int *array = getRandomArray(size);
         logTime(array, size, outFile, mergeSort);
         logTime(array, size, outFile, quickSort);
         logTime(array, size, outFile, combsort);
         logTime(array, size, outFile, Shellsort);
         logTime(array, size, outFile, heapsort);
         logTime(array, size, outFile);
-        logTime(array, size, outFile, radixsort, 10);
-        logTime(array, size, outFile, radixsort, 100);
-        logTime(array, size, outFile, radixsort, 1000);
-        logTime(array, size, outFile, radixsort, 10000);
-        logTime(array, size, outFile, countsort);
-        logTime(array, size, outFile, BucketSort);
+        logTimeRadix(array, size, outFile, 10);
+        logTimeRadix(array, size, outFile, 100);
+        logTimeRadix(array, size, outFile, 1000);
+        logTimeRadix(array, size, outFile, 10000);
+        logTimeCount(array, size, outFile, 0);
         array = applyBounds(array, size, 1000);
-        logTime(array, size, outFile, radixsort, 10);
-        logTime(array, size, outFile, radixsort, 100);
-        logTime(array, size, outFile, radixsort, 1000);
-        logTime(array, size, outFile, radixsort, 10000);
-        logTime(array, size, outFile, countsort);
+        logTimeRadix(array, size, outFile, 10);
+        logTimeRadix(array, size, outFile, 100);
+        logTimeRadix(array, size, outFile, 1000);
+        logTimeRadix(array, size, outFile, 10000);
+        logTimeCount(array, size, outFile, 1000);
+        float *fArray = getRandomFloatArray(size);
+        float fSize = static_cast<long>(size);
+        logTimeBucket(fArray, size, outFile);
+        cout << "Array " << i << " Sorted..." << endl;
     } 
-    
+    outFile.close();
+    cout << "Sorting Completed! Check the SortTimes.csv file for the results." << endl;
 }
 
 
@@ -143,6 +137,7 @@ int *getSizes(int numOfArrays) {
         }
         *(sizeArr+i) = size;
     }
+    cout << "Returning Arrays" << endl;
     return sizeArr;
 }
 
@@ -155,6 +150,16 @@ int *getRandomArray(int size) {
         *(randArr+i) = rand();
     }
     return randArr;    
+}
+
+float *getRandomFloatArray(int size) {
+    float *randArr = new float[size];
+    srand(time(0)); //Seed the random number generator
+    //Create an array with bounds, with '0' being a signal value
+    for(int i = 0; i < size; i++) {
+        *(randArr+i) = rand()%1;
+    }
+    return randArr;
 }
 
 
@@ -197,15 +202,6 @@ void logTime(int *array, int size, ofstream &outfile, radixPtr sort, int radix) 
     outfile << timeElasped << ",";
 }
 
-//Time a bucekt sorting algorithm and add it to the output file
-void logTime(int *array, int size, ofstream &outfile, bucketPtr sort, long bucket) {
-    /* Call and time the given function, exporting the result to a csv file */
-    chrono::time_point<std::chrono::high_resolution_clock> start = startTimer();
-    sort(array, size, bucket);
-    auto timeElasped = endTimer(start);
-    outfile << timeElasped << ",";
-}
-
 //Time a sorting algorithm from the algorithm library and add it to the output file
 void logTime(int *array, int size, ofstream &outfile) {
     /* Call and time the sort method from the algorithm library, exporting the result to a csv file */
@@ -216,10 +212,10 @@ void logTime(int *array, int size, ofstream &outfile) {
 }
 
 //Time a sorting algorithm from the algorithm library and add it to the output file
-void logTime(int *array, long size, ofstream &outfile) {
+void logTime(int *array, long size, ofstream &outfile, countPtr sort) {
     /* Call and time the sort method from the algorithm library, exporting the result to a csv file */
     chrono::time_point<std::chrono::high_resolution_clock> start = startTimer();
-    countsort(array, size);
+    sort(array, size);
     auto timeElasped = endTimer(start);
     outfile << timeElasped << ",";
 }

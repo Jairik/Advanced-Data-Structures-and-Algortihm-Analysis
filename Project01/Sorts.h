@@ -67,7 +67,6 @@ template <class T> void bubble(T A[], int size) {
       }
     }
   }
-  return A;
 }
 
 /*
@@ -393,7 +392,6 @@ Notes: This is for floating point data only in the range [0, 1). */
 template <class T> void BucketSort(T *A, long sz) {
   //	deque<T> *Buckets = new deque<T> [sz];
   vector<T> *Buckets = new vector<T>[sz];
-
   for (long i = 0; i < sz; i++)
     Buckets[static_cast<long>(sz * A[i])].push_back(A[i]);
 
