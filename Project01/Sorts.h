@@ -37,7 +37,7 @@ template <class T> void heapsort(T data[], const int n);
 template <class T> void radixsort(T data[], const int n, const int radix);
 template <class T> void countsort(T A[], long sz);
 // T needs to be a float type for bucket.
-template <class T> void BucketSort(T A[], long sz, long buckets);
+template <class T> void BucketSort(T A[], long sz);
 
 /*
 Description: Determines if the array is sorted.

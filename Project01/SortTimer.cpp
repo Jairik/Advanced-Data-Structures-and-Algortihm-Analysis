@@ -34,12 +34,14 @@ via an int pointer */
 int *getSizes(int);
 //Return a pointer to an array of randomly generated integers, given size
 int *getRandomArray(int);
+//Return a pointer to an array of randomly generated floats
+float *getRandomFloatArray(int);
 //Given bounds, will set a max and min of the array
 int *applyBounds(int *, int, int);
 //Start the chrono timer and return the start time
 chrono::time_point<std::chrono::high_resolution_clock> startTimer();
 //Stop the chrono timer and return time elasped, given start as parameter
-long endTimer(chrono::time_point<std::chrono::high_resolution_clock>);
+double endTimer(chrono::time_point<std::chrono::high_resolution_clock>);
 //Will time the given function and output the time to the outfile
 void logTime(int *, int, ofstream &, sortPtr);
 //Time the sort for the sorting method from the algorithm library
@@ -47,9 +49,9 @@ void logTimeAlgSort(int *, int, ofstream &);
 //Overloaded for radix sort
 void logTimeRadix(int *, int, ofstream &, int);
 //Overloaded for bucket sort
-void logTimeBucket(float *, long, ofstream &);
+void logTimeBucket(float *, int, ofstream &);
 //Overloaded for count sort
-void logTimeCount(int *, long, ofstream &, int);
+void logTimeCount(int *, long, ofstream &);
 
 
 int main() {
@@ -80,20 +82,19 @@ int main() {
         logTime(array, size, outFile, combsort);
         logTime(array, size, outFile, Shellsort);
         logTime(array, size, outFile, heapsort);
-        logTime(array, size, outFile);
+        logTimeAlgSort(array, size, outFile);
         logTimeRadix(array, size, outFile, 10);
         logTimeRadix(array, size, outFile, 100);
         logTimeRadix(array, size, outFile, 1000);
         logTimeRadix(array, size, outFile, 10000);
-        logTimeCount(array, size, outFile, 0);
+        logTimeCount(array, size, outFile);
         array = applyBounds(array, size, 1000);
         logTimeRadix(array, size, outFile, 10);
         logTimeRadix(array, size, outFile, 100);
         logTimeRadix(array, size, outFile, 1000);
         logTimeRadix(array, size, outFile, 10000);
-        logTimeCount(array, size, outFile, 1000);
+        logTimeCount(array, size, outFile);
         float *fArray = getRandomFloatArray(size);
-        float fSize = static_cast<long>(size);
         logTimeBucket(fArray, size, outFile);
         cout << "Array " << i << " Sorted..." << endl;
     } 
@@ -157,7 +158,7 @@ float *getRandomFloatArray(int size) {
     srand(time(0)); //Seed the random number generator
     //Create an array with bounds, with '0' being a signal value
     for(int i = 0; i < size; i++) {
-        *(randArr+i) = rand()%1;
+        *(randArr+i) = static_cast<float>(rand())/RAND_MAX;
     }
     return randArr;
 }
@@ -169,11 +170,11 @@ chrono::time_point<std::chrono::high_resolution_clock> startTimer() {
 }
 
 
-long endTimer(chrono::time_point<std::chrono::high_resolution_clock> start) {
+double endTimer(chrono::time_point<std::chrono::high_resolution_clock> start) {
     auto end = std::chrono::high_resolution_clock::now();
     auto timeElasped = std::chrono::duration_cast<chrono::microseconds>(end-start);
-    timeElasped = timeElasped*1000000; //convert to seconds
-    return timeElasped.count();
+    //timeElasped = timeElasped/1000000; //convert to seconds
+    return (timeElasped.count());
 }
 
 //Given an array, will apply bounds to it (change the numbers so it only falls within 0 and the bound)
@@ -186,7 +187,6 @@ int *applyBounds(int *array, int arraySize, int bounds) {
 
 //Time a given sorting algorithm and add it to the output file
 void logTime(int *array, int size, ofstream &outfile, sortPtr sort) {
-    /* Call and time the given function, exporting the result to a csv file */
     chrono::time_point<std::chrono::high_resolution_clock> start = startTimer();
     sort(array, size);
     auto timeElasped = endTimer(start);
@@ -194,28 +194,34 @@ void logTime(int *array, int size, ofstream &outfile, sortPtr sort) {
 }
 
 //Time a radix sorting algorithm and add it to the output file
-void logTime(int *array, int size, ofstream &outfile, radixPtr sort, int radix) {
-    /* Call and time the given function, exporting the result to a csv file */
+void logTimeRadix(int *array, int size, ofstream &outfile, int radix) {
     chrono::time_point<std::chrono::high_resolution_clock> start = startTimer();
-    sort(array, size, radix);
+    radixsort(array, size, radix);
     auto timeElasped = endTimer(start);
     outfile << timeElasped << ",";
 }
 
 //Time a sorting algorithm from the algorithm library and add it to the output file
-void logTime(int *array, int size, ofstream &outfile) {
-    /* Call and time the sort method from the algorithm library, exporting the result to a csv file */
+void logTimeAlgSort(int *array, int size, ofstream &outfile) {
     chrono::time_point<std::chrono::high_resolution_clock> start = startTimer();
     std::sort(array, array+size);
     auto timeElasped = endTimer(start);
     outfile << timeElasped << ",";
 }
 
-//Time a sorting algorithm from the algorithm library and add it to the output file
-void logTime(int *array, long size, ofstream &outfile, countPtr sort) {
-    /* Call and time the sort method from the algorithm library, exporting the result to a csv file */
+
+void logTimeCount(int *array, long size, ofstream &outfile) {
     chrono::time_point<std::chrono::high_resolution_clock> start = startTimer();
-    sort(array, size);
+    countsort(array, size);
+    auto timeElasped = endTimer(start);
+    outfile << timeElasped << ",";
+}
+
+
+void logTimeBucket(float *array, int size, ofstream &outfile) {
+    long lsize = static_cast<long>(size);
+    chrono::time_point<std::chrono::high_resolution_clock> start = startTimer();
+    BucketSort(array, lsize);
     auto timeElasped = endTimer(start);
     outfile << timeElasped << ",";
 }
