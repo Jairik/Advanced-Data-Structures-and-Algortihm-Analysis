@@ -186,43 +186,89 @@ int *applyBounds(int *array, int arraySize, int bounds) {
 }
 
 //Time a given sorting algorithm and add it to the output file
-void logTime(int *array, int size, ofstream &outfile, sortPtr sort) {
+void logTime(int *array, const int size, ofstream &outfile, sortPtr sort) {
+    //TESTING
+    for(int i = 0; i < size; i++) {
+        cout << array[i] << ", ";
+        if(i%12 == 0) {
+            cout << endl;
+        }
+    }
+    cout << endl << endl << endl;
+    //
+    //Make a copy of the current, unsorted array for the algorithm to sort
+    int *arrayCopy = new int[size]; 
+    for(int i = 0; i < size; i++) {
+        arrayCopy[i] = array[i];
+    }
+
+    //Time the sort using the new array copy
     chrono::time_point<std::chrono::high_resolution_clock> start = startTimer();
-    sort(array, size);
+    sort(arrayCopy, size);
     auto timeElasped = endTimer(start);
     outfile << static_cast<double>(timeElasped/1000000) << ",";
+    
+    delete[] arrayCopy; //freeing memory 
 }
 
 //Time a radix sorting algorithm and add it to the output file
 void logTimeRadix(int *array, int size, ofstream &outfile, int radix) {
+     //Make a copy of the current, unsorted array for the algorithm to sort
+    int *arrayCopy = new int[size]; 
+    for(int i = 0; i < size; i++) {
+        arrayCopy[i] = array[i];
+    }
+
+    //Time the sort using the new array copy
     chrono::time_point<std::chrono::high_resolution_clock> start = startTimer();
-    radixsort(array, size, radix);
+    radixsort(arrayCopy, size, radix);
     auto timeElasped = endTimer(start);
     outfile << static_cast<double>(timeElasped/1000000) << ",";
 }
 
 //Time a sorting algorithm from the algorithm library and add it to the output file
 void logTimeAlgSort(int *array, int size, ofstream &outfile) {
+     //Make a copy of the current, unsorted array for the algorithm to sort
+    int *arrayCopy = new int[size]; 
+    for(int i = 0; i < size; i++) {
+        arrayCopy[i] = array[i];
+    }
+
+    //Time the sort using the new array copy
     chrono::time_point<std::chrono::high_resolution_clock> start = startTimer();
-    std::sort(array, array+size);
+    std::sort(arrayCopy, array+size);
     auto timeElasped = endTimer(start);
     outfile << static_cast<double>(timeElasped/1000000) << ",";
 }
 
 
 void logTimeCount(int *array, int size, ofstream &outfile) {
+     //Make a copy of the current, unsorted array for the algorithm to sort
+    int *arrayCopy = new int[size]; 
+    for(int i = 0; i < size; i++) {
+        arrayCopy[i] = array[i];
+    }
+
+    //Time the sort using the new array copy
     chrono::time_point<std::chrono::high_resolution_clock> start = startTimer();
     long lsize = static_cast<long>(size);
-    countsort(array, lsize);
+    countsort(arrayCopy, lsize);
     auto timeElasped = endTimer(start);
     outfile << static_cast<double>(timeElasped/1000000) << ",";
 }
 
 
 void logTimeBucket(float *array, int size, ofstream &outfile) {
+     //Make a copy of the current, unsorted array for the algorithm to sort
+    int *arrayCopy = new int[size]; 
+    for(int i = 0; i < size; i++) {
+        arrayCopy[i] = array[i];
+    }
+
+    //Time the sort using the new array copy
     long lsize = static_cast<long>(size);
     chrono::time_point<std::chrono::high_resolution_clock> start = startTimer();
-    BucketSort(array, lsize);
+    BucketSort(arrayCopy, lsize);
     auto timeElasped = endTimer(start);
     outfile << static_cast<double>(timeElasped/1000000) << ",";
 }
