@@ -55,7 +55,6 @@ void logTimeCount(int *, int, ofstream &);
 
 
 int main() {
-    int *currentArray; //Will hold the current array of random integers
     cout << "Welcome to JJ's Sort Timer Program!" << endl; //Introduction message
     int numArrays = getNumArrays(); //Get the number of arrays and assign to numArrays
     int *arraySizes = getSizes(numArrays); //Hold the size of each array
@@ -78,16 +77,21 @@ int main() {
         outFile << "\n" << size << ",";
         int *array = getRandomArray(size);
         logTime(array, size, outFile, mergeSort);
+        cout <<"Merge Sort Done" <<endl;
         logTime(array, size, outFile, quickSort);
+        cout << "quick be done" <<endl;
         logTime(array, size, outFile, combsort);
         logTime(array, size, outFile, Shellsort);
         logTime(array, size, outFile, heapsort);
+        cout <<"shell done" << endl;
         logTimeAlgSort(array, size, outFile);
         logTimeRadix(array, size, outFile, 10);
         logTimeRadix(array, size, outFile, 100);
         logTimeRadix(array, size, outFile, 1000);
         logTimeRadix(array, size, outFile, 10000);
+        cout << "boutta count" << endl;
         logTimeCount(array, size, outFile);
+        cout << "Applying bounds" <<endl;
         array = applyBounds(array, size, 1000);
         logTimeRadix(array, size, outFile, 10);
         logTimeRadix(array, size, outFile, 100);
@@ -187,15 +191,6 @@ int *applyBounds(int *array, int arraySize, int bounds) {
 
 //Time a given sorting algorithm and add it to the output file
 void logTime(int *array, const int size, ofstream &outfile, sortPtr sort) {
-    //TESTING
-    for(int i = 0; i < size; i++) {
-        cout << array[i] << ", ";
-        if(i%12 == 0) {
-            cout << endl;
-        }
-    }
-    cout << endl << endl << endl;
-    //
     //Make a copy of the current, unsorted array for the algorithm to sort
     int *arrayCopy = new int[size]; 
     for(int i = 0; i < size; i++) {
@@ -224,6 +219,18 @@ void logTimeRadix(int *array, int size, ofstream &outfile, int radix) {
     radixsort(arrayCopy, size, radix);
     auto timeElasped = endTimer(start);
     outfile << static_cast<double>(timeElasped/1000000) << ",";
+
+    /* TESTING !!!!!!!!!!!!!*/
+    cout << endl << "---RADIX = " << radix << endl;
+    for(int i = 0; i < size; i++) {
+        
+        cout << arrayCopy[i] << " ";
+    }
+    cout << endl;
+    //DELETE TO HERE
+
+
+    delete[] arrayCopy; //freeing memory 
 }
 
 //Time a sorting algorithm from the algorithm library and add it to the output file
@@ -236,9 +243,11 @@ void logTimeAlgSort(int *array, int size, ofstream &outfile) {
 
     //Time the sort using the new array copy
     chrono::time_point<std::chrono::high_resolution_clock> start = startTimer();
-    std::sort(arrayCopy, array+size);
+    std::sort(arrayCopy, arrayCopy+size);
     auto timeElasped = endTimer(start);
     outfile << static_cast<double>(timeElasped/1000000) << ",";
+
+    delete[] arrayCopy; //freeing memory 
 }
 
 
@@ -255,6 +264,8 @@ void logTimeCount(int *array, int size, ofstream &outfile) {
     countsort(arrayCopy, lsize);
     auto timeElasped = endTimer(start);
     outfile << static_cast<double>(timeElasped/1000000) << ",";
+
+    delete[] arrayCopy; //freeing memory 
 }
 
 
@@ -271,4 +282,6 @@ void logTimeBucket(float *array, int size, ofstream &outfile) {
     BucketSort(arrayCopy, lsize);
     auto timeElasped = endTimer(start);
     outfile << static_cast<double>(timeElasped/1000000) << ",";
+
+    delete[] arrayCopy; //freeing memory 
 }
