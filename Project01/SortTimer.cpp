@@ -51,7 +51,7 @@ void logTimeRadix(int *, int, ofstream &, int);
 //Overloaded for bucket sort
 void logTimeBucket(float *, int, ofstream &);
 //Overloaded for count sort
-void logTimeCount(int *, long, ofstream &);
+void logTimeCount(int *, int, ofstream &);
 
 
 int main() {
@@ -190,7 +190,7 @@ void logTime(int *array, int size, ofstream &outfile, sortPtr sort) {
     chrono::time_point<std::chrono::high_resolution_clock> start = startTimer();
     sort(array, size);
     auto timeElasped = endTimer(start);
-    outfile << timeElasped << ",";
+    outfile << static_cast<double>(timeElasped/1000000) << ",";
 }
 
 //Time a radix sorting algorithm and add it to the output file
@@ -198,7 +198,7 @@ void logTimeRadix(int *array, int size, ofstream &outfile, int radix) {
     chrono::time_point<std::chrono::high_resolution_clock> start = startTimer();
     radixsort(array, size, radix);
     auto timeElasped = endTimer(start);
-    outfile << timeElasped << ",";
+    outfile << static_cast<double>(timeElasped/1000000) << ",";
 }
 
 //Time a sorting algorithm from the algorithm library and add it to the output file
@@ -206,15 +206,16 @@ void logTimeAlgSort(int *array, int size, ofstream &outfile) {
     chrono::time_point<std::chrono::high_resolution_clock> start = startTimer();
     std::sort(array, array+size);
     auto timeElasped = endTimer(start);
-    outfile << timeElasped << ",";
+    outfile << static_cast<double>(timeElasped/1000000) << ",";
 }
 
 
-void logTimeCount(int *array, long size, ofstream &outfile) {
+void logTimeCount(int *array, int size, ofstream &outfile) {
     chrono::time_point<std::chrono::high_resolution_clock> start = startTimer();
-    countsort(array, size);
+    long lsize = static_cast<long>(size);
+    countsort(array, lsize);
     auto timeElasped = endTimer(start);
-    outfile << timeElasped << ",";
+    outfile << static_cast<double>(timeElasped/1000000) << ",";
 }
 
 
@@ -223,5 +224,5 @@ void logTimeBucket(float *array, int size, ofstream &outfile) {
     chrono::time_point<std::chrono::high_resolution_clock> start = startTimer();
     BucketSort(array, lsize);
     auto timeElasped = endTimer(start);
-    outfile << timeElasped << ",";
+    outfile << static_cast<double>(timeElasped/1000000) << ",";
 }
