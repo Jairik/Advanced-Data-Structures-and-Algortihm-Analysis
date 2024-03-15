@@ -1,8 +1,14 @@
 /*Author: JJ McCauley
 Creation Date: 3/8/24
 Last Update: 3/8/24
-Description: ---
-User Interface: User will be asked for a number of arrays to be tested via the console.
+Description: This program works with the header file "Sorts.h" to time various different
+comparison and non-comparison based sorting algorithms. The program will receive the number
+of arrays to sort from the user and the sizes for each respective array, then will randomly
+assign integers to those arrays. The main function will then call each sort, timing it's
+execution and logging it in a csv file called "SortTImes.csv". The array will be bounded
+to either a range or floats when necessary.
+User Interface: User will be asked for a number of arrays to be tested and the
+array sizes via the console.
 Notes: Algorithms and code were taken from either Data Structures and Algorithms 
 in C++ by Adam Drozdek or Introduction to Algorithms Fourth Edition by Cormen, 
 Leiserson, Rivest, and Stein */
@@ -72,26 +78,20 @@ int main() {
     cout << "Sorting now..." << endl;
     //Iterate through each sorting algorthim
     for(int i = 0; i < numArrays; i++) {
-        cout << "inside for loop, iteration " << i << endl;
         size = arraySizes[i];
         outFile << "\n" << size << ",";
         int *array = getRandomArray(size);
         logTime(array, size, outFile, mergeSort);
-        cout <<"Merge Sort Done" <<endl;
         logTime(array, size, outFile, quickSort);
-        cout << "quick be done" <<endl;
         logTime(array, size, outFile, combsort);
         logTime(array, size, outFile, Shellsort);
         logTime(array, size, outFile, heapsort);
-        cout <<"shell done" << endl;
         logTimeAlgSort(array, size, outFile);
         logTimeRadix(array, size, outFile, 10);
         logTimeRadix(array, size, outFile, 100);
         logTimeRadix(array, size, outFile, 1000);
         logTimeRadix(array, size, outFile, 10000);
-        cout << "boutta count" << endl;
         logTimeCount(array, size, outFile);
-        cout << "Applying bounds" <<endl;
         array = applyBounds(array, size, 1000);
         logTimeRadix(array, size, outFile, 10);
         logTimeRadix(array, size, outFile, 100);
@@ -106,7 +106,11 @@ int main() {
     cout << "Sorting Completed! Check the SortTimes.csv file for the results." << endl;
 }
 
-
+/*Description: This function asks the user for a number of arrays via the console, 
+validates the input to ensure that it is positive, and returns that number.
+Parameters: N/A
+Return: int: Return the number of arrays the user would like to sort
+Notes: N/A */
 int getNumArrays() {
     int numArrays;
     bool valid = false;
@@ -123,7 +127,11 @@ int getNumArrays() {
     return numArrays;
 }
 
-
+/*Description: This function asks the user for the array of size of each array
+to be sorted, validating the input.
+Parameters: int numofArrays: The number of arrays the user would like to sort
+Return: int pointer: A pointer to an array of array sizes
+Notes: N/A */
 int *getSizes(int numOfArrays) {
     int size;
     bool valid;
@@ -142,11 +150,14 @@ int *getSizes(int numOfArrays) {
         }
         *(sizeArr+i) = size;
     }
-    cout << "Returning Arrays" << endl;
     return sizeArr;
 }
 
-
+/*Description: This function will create the arrays of random integers, returning the
+new array.
+Parameters: int size: The size of the array to be assigned
+Return: int pointer: A pointer to an array random integers
+Notes: N/A */
 int *getRandomArray(int size) {
     int *randArr = new int[size];
     srand(time(0)); //Seed the random number generator
@@ -157,6 +168,11 @@ int *getRandomArray(int size) {
     return randArr;    
 }
 
+/*Description: This function will create the arrays of random floats, returning the
+new array.
+Parameters: int size: The size of the array to be assigned
+Return: float pointer: A pointer to an array of random float values
+Notes: N/A */
 float *getRandomFloatArray(int size) {
     float *randArr = new float[size];
     srand(time(0)); //Seed the random number generator
@@ -167,13 +183,21 @@ float *getRandomFloatArray(int size) {
     return randArr;
 }
 
-
+/*Description: This helper function starts the Chrono timer
+Parameters: N/A
+Return: chrono::time_point<std::chrono::high_resolution_clock>: A value holding 
+the start time
+Notes: N/A */
 chrono::time_point<std::chrono::high_resolution_clock> startTimer() {
     auto start = chrono::high_resolution_clock::now();
     return start;
 }
 
-
+/*Description: This helper function ends the chrono timer, returning the amount
+of time taken to execute.
+Parameters: start: The start time
+Return: double: Will return the time it took to execute the program, in milliseconds.
+Notes: N/A */
 double endTimer(chrono::time_point<std::chrono::high_resolution_clock> start) {
     auto end = std::chrono::high_resolution_clock::now();
     auto timeElasped = std::chrono::duration_cast<chrono::microseconds>(end-start);
@@ -181,7 +205,13 @@ double endTimer(chrono::time_point<std::chrono::high_resolution_clock> start) {
     return (timeElasped.count());
 }
 
-//Given an array, will apply bounds to it (change the numbers so it only falls within 0 and the bound)
+/*Description: This function applies a "bound" to an array, returning the new 
+array with a maximum of "bounds"-1
+Parameters: int pointer array: The current array that should be bounded
+int arraySize: the size of the array
+int bounds: The maximum range that should be allowed in the array
+Return: int pointer: a pointer to the new array
+Notes: N/A */
 int *applyBounds(int *array, int arraySize, int bounds) {
     for(int i = 0; i < arraySize; i++) {
         array[i] = array[i]%(bounds);
@@ -189,7 +219,16 @@ int *applyBounds(int *array, int arraySize, int bounds) {
     return array;
 }
 
-//Time a given sorting algorithm and add it to the output file
+/*Description: This function will create a new array copy called arrayCopy, ensuring
+that the original array does not get modified. It will then start the chronos timer, calling
+the startTimer helper funciton, then will run the provided sorting algorithm, end the timer 
+using the helper function, and output the result to the SortTimes.csv file
+Parameters: int *array: A pointer to the current array to be sorted
+const int size: The size of the current array
+ofstream &outfile: The output file for the result to be written to
+sortPtr sort: A function pointer pointing to the sort algorithm to be ran
+Return: N/A
+Notes: N/A */
 void logTime(int *array, const int size, ofstream &outfile, sortPtr sort) {
     //Make a copy of the current, unsorted array for the algorithm to sort
     int *arrayCopy = new int[size]; 
@@ -206,7 +245,16 @@ void logTime(int *array, const int size, ofstream &outfile, sortPtr sort) {
     delete[] arrayCopy; //freeing memory 
 }
 
-//Time a radix sorting algorithm and add it to the output file
+/*Description: This function will create a new array copy called arrayCopy, ensuring
+that the original array does not get modified. It will then start the chronos timer, calling
+the startTimer helper funciton, then will run radix sort, end the timer 
+using the helper function, and output the result to the SortTimes.csv file
+Parameters: int *array: A pointer to the current array to be sorted
+int size: The size of the current array
+ofstream &outfile: The output file for the result to be written to
+int radix: The current radix to pass through the radixSort function
+Return: N/A
+Notes: N/A */
 void logTimeRadix(int *array, int size, ofstream &outfile, int radix) {
      //Make a copy of the current, unsorted array for the algorithm to sort
     int *arrayCopy = new int[size]; 
@@ -219,21 +267,18 @@ void logTimeRadix(int *array, int size, ofstream &outfile, int radix) {
     radixsort(arrayCopy, size, radix);
     auto timeElasped = endTimer(start);
     outfile << static_cast<double>(timeElasped/1000000) << ",";
-
-    /* TESTING !!!!!!!!!!!!!*/
-    cout << endl << "---RADIX = " << radix << endl;
-    for(int i = 0; i < size; i++) {
-        
-        cout << arrayCopy[i] << " ";
-    }
-    cout << endl;
-    //DELETE TO HERE
-
-
     delete[] arrayCopy; //freeing memory 
 }
 
-//Time a sorting algorithm from the algorithm library and add it to the output file
+/*Description: This function will create a new array copy called arrayCopy, ensuring
+that the original array does not get modified. It will then start the chronos timer, calling
+the startTimer helper funciton, then will run the Algorith's Library Sorting function,
+end the timer using the helper function, and output the result to the SortTimes.csv file
+Parameters: int *array: A pointer to the current array to be sorted
+int size: The size of the current array
+ofstream &outfile: The output file for the result to be written to
+Return: N/A
+Notes: N/A */
 void logTimeAlgSort(int *array, int size, ofstream &outfile) {
      //Make a copy of the current, unsorted array for the algorithm to sort
     int *arrayCopy = new int[size]; 
@@ -250,7 +295,15 @@ void logTimeAlgSort(int *array, int size, ofstream &outfile) {
     delete[] arrayCopy; //freeing memory 
 }
 
-
+/*Description: This function will create a new array copy called arrayCopy, ensuring
+that the original array does not get modified. It will then start the chronos timer, calling
+the startTimer helper funciton, then will run the Count sorting algorithm, end the timer 
+using the helper function, and output the result to the SortTimes.csv file
+Parameters: int *array: A pointer to the current array to be sorted
+int size: The size of the current array
+ofstram &outfile: The output file for the result to be written to
+Return: N/A
+Notes: N/A */
 void logTimeCount(int *array, int size, ofstream &outfile) {
      //Make a copy of the current, unsorted array for the algorithm to sort
     int *arrayCopy = new int[size]; 
@@ -268,7 +321,15 @@ void logTimeCount(int *array, int size, ofstream &outfile) {
     delete[] arrayCopy; //freeing memory 
 }
 
-
+/*Description: This function will create a new array copy called arrayCopy, ensuring
+that the original array does not get modified. It will then start the chronos timer, calling
+the startTimer helper funciton, then will run the Bucket Sorting algorithm, end the timer 
+using the helper function, and output the result to the SortTimes.csv file
+Parameters: float *array: A pointer to the current array to be sorted
+int size: The size of the current array
+ofstram &outfile: The output file for the result to be written to
+Return: N/A
+Notes: N/A */
 void logTimeBucket(float *array, int size, ofstream &outfile) {
      //Make a copy of the current, unsorted array for the algorithm to sort
     int *arrayCopy = new int[size]; 
