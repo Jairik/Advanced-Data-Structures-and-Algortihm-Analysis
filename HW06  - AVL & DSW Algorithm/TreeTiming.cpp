@@ -1,7 +1,9 @@
 /*Author: JJ McCauley (BST Code provided by Dr. Spickler)
 Creation Date: 4/5/24
 Last Update: 4/5/24
-Description: <One paragraph describing the function of the program>
+Description: This program aims to time AVL Insertion and BST Insertion + DSW Algorithm, allowing for the
+user to choose array size and data range. An array will then be created with random integers within that
+range, and the time elasped will be outputted to the console.
 User Interface: N/A
 Notes: N/A */
 
@@ -55,7 +57,7 @@ int main() {
         double tElasped = static_cast<double>(timeElasped) /1000000.0; //converting to seconds
         cout << "Time Elasped for AVL Insertion: " << tElasped << " seconds" << endl;
 
-        /* Testing BST and DSW ALgorithm Times */
+        /* Testing BST + DSW Times */
 
         //Starting the timer
         cout << "Timing BST & DSW..." << endl;
@@ -74,7 +76,7 @@ int main() {
         cout << "Time Elasped for BST Insertion + DSW Algorithm: ";
         cout << tElasped << " seconds" << endl;
 
-        //Asking the user if they would like to play again
+        //Asking the user if they would like to run the program again
         char userChoice;
         cout << "Would you like to test another array count? (Y/N)" << endl;
         cin >> userChoice;
