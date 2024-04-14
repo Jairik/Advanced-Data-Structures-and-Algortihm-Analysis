@@ -15,50 +15,44 @@ and the rest is placed at the bottom,
 
 
 
-/*
-Does a right rotation at the input node.  The function also updates the height
-values for the nodes that are affected.
-
-Parameters
-nodePtr --- pointer to the node to rotate right around.
-*/
-
+//Performs a right rotation around a given node
 template <class T> void AVLTree<T>::RightRotation(TreeNode *&nodePtr) {
-  TreeNode *L = nodePtr->left;
+  //Store left and left->right pointers
+  TreeNode *L = nodePtr->left; 
   TreeNode *temp = L->right;
+  //"Roll" the nodes around, moving the left ptr to the root
   L->right = nodePtr;
+  //Move left to nodePtr's original left->right
   nodePtr->left = temp;
+  //Get the height of nodePtr and L
   nodePtr->height =
       max(getHeight(nodePtr->left), getHeight(nodePtr->right)) + 1;
   L->height = max(getHeight(L->left), getHeight(L->right)) + 1;
+  //Set the root as L
   nodePtr = L;
 }
 
-/*
-Does a left rotation at the input node.  The function also updates the height
-values for the nodes that are affected.
 
-Parameters
-nodePtr --- pointer to the node to rotate right around.
-*/
-
+//Performs a left rotation around a given node
 template <class T> void AVLTree<T>::LeftRotation(TreeNode *&nodePtr) {
+  //Store nodePtr->right subtree as R
   TreeNode *R = nodePtr->right;
+  //Store R->left subtree as temp
   TreeNode *temp = R->left;
+  //Move nodePtr to R->left
   R->left = nodePtr;
+  //Reassign the right child of nodePtr to temp
   nodePtr->right = temp;
+  //Updating the heights of nodePtr and R
   nodePtr->height =
       max(getHeight(nodePtr->left), getHeight(nodePtr->right)) + 1;
   R->height = max(getHeight(R->left), getHeight(R->right)) + 1;
+  //Set the root as R
   nodePtr = R;
 }
 
-/*
-Returns the height of the subtree pointed to by nodePtr.
 
-Parameters
-nodePtr --- pointer to the node.
-*/
+//Returns the stored height of a given node
 template <class T> int AVLTree<T>::getHeight(TreeNode *nodePtr) {
   if (!nodePtr)
     return 0;
@@ -66,13 +60,15 @@ template <class T> int AVLTree<T>::getHeight(TreeNode *nodePtr) {
   return nodePtr->height;
 }
 
-//Given a node, recursively finds the largest height.
+
+//Given a node, finds the largest height difference
 template <class T> int AVLTree<T>::getBalanceFactor(TreeNode *nodePtr) {
   if (!nodePtr)
     return 0;
 
-  return getHeight(nodePtr->left) - getHeight(nodePtr->right); //Recursive callback stuff
+  return getHeight(nodePtr->left) - getHeight(nodePtr->right); //Left Subtree - Right Subtree
 }
+
 
 /*Given a node, will apply one of the four cases:
     1) BF > 1 (Left Heavy) & BF of left subtree >= 0
@@ -92,7 +88,7 @@ template <class T> void AVLTree<T>::Balance(TreeNode *&nodePtr) {
 
   int balanceFactor = getBalanceFactor(nodePtr);
 
-  // Left heavy.
+  // If right heavy, case 1 & 2
   if (balanceFactor > 1) {
     if (getBalanceFactor(nodePtr->left) >= 0)
       RightRotation(nodePtr);
@@ -102,7 +98,7 @@ template <class T> void AVLTree<T>::Balance(TreeNode *&nodePtr) {
     }
   }
 
-  // Right heavy.
+  // If Left Heavy, case 3 & 4
   if (balanceFactor < -1) {
     if (getBalanceFactor(nodePtr->right) <= 0) {
       LeftRotation(nodePtr);
@@ -113,30 +109,33 @@ template <class T> void AVLTree<T>::Balance(TreeNode *&nodePtr) {
   }
 }
 
-/*
-Inserts newNode into the AVL tree if the value is not already in the
-tree.  If the value is in the tree the count on the node is increased
-and the new node is released from memory.
-*/
+
+//Inserts a node. If it already exists, increases count.
+//Parameters: nodePtr is the "temp" and newNode is the node to insert
 template <class T>
 void AVLTree<T>::insert(TreeNode *&nodePtr, TreeNode *&newNode) {
-  if (nodePtr == nullptr)
+  //Base case. End of the tree and proper location has been reached.
+  if (nodePtr == nullptr) {
     nodePtr = newNode; // Insert the node.
-  else if (newNode->value < nodePtr->value)
+  }
+  //Recursively move to the left child
+  else if (newNode->value < nodePtr->value) {
     insert(nodePtr->left, newNode); // Search the left branch
-  else if (newNode->value > nodePtr->value)
+  }
+  //Recursively move to the right child
+  else if (newNode->value > nodePtr->value) {
     insert(nodePtr->right, newNode); // Search the right branch
+  }
+  //nodePtr == newNode. Then increment the count and delete unused newNode
   else {
-    // If the value is a duplicate increase the count.
-    // In this case the newNode is not needed, delete it.
     nodePtr->count++;
     delete newNode;
   }
 
-  // Update the height of each node in the branches called.
-  nodePtr->height =
-      1 + max(getHeight(nodePtr->left), getHeight(nodePtr->right));
+  //Update the height of each node in the branches called.
+  nodePtr->height = 1 + max(getHeight(nodePtr->left), getHeight(nodePtr->right));
 
+  //Rebalance the tree
   Balance(nodePtr);
 }
 
@@ -168,6 +167,7 @@ template <class T> bool AVLTree<T>::searchNode(T item) {
 template <class T> void AVLTree<T>::remove(T item) { deleteNode(item, root); }
 
 //Deletes a given node, if it is present
+//UPDATE 4/14/24: I cannot tackle this today, I will try to tomorrow though. Current comments are made by professor
 template <class T> void AVLTree<T>::deleteNode(T item, TreeNode *&nodePtr) {
   if (!nodePtr)
     return;
@@ -231,10 +231,11 @@ template <class T> void AVLTree<T>::deleteNode(T item, TreeNode *&nodePtr) {
     Balance(nodePtr);
 }
 
+
 /* -------------------------------------------------------------------------
 ------------------END OF TESTABLE MATERIAL----------------------------------
 ----------------------------------------------------------------------------*/
-
+//The rest of this code is unmodified
 
 
 //***************************************************
