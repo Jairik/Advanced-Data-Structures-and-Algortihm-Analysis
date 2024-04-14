@@ -7,8 +7,10 @@
 using namespace std;
 
 /*
+--------------------------------------------------------------------------------------
 Annotated Code for AVL Trees. Comments are added on functions that will be tested,
-and the rest is placed at the bottom
+and the rest is placed at the bottom,
+--------------------------------------------------------------------------------------
 */
 
 
