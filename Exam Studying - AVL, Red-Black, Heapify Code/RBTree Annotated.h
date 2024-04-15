@@ -3,67 +3,14 @@
 
 using namespace std;
 
-enum color_t {
-	RED, BLACK
-// Red = 0, Black = 1
-};
+/*
+--------------------------------------------------------------------------------------
+Annotated Code for AVL Trees. Comments are added on functions that will be tested,
+and the rest is placed at the bottom.
+Member variables and everything is placed at the very bottom.
+--------------------------------------------------------------------------------------
+*/
 
-template<class T>
-class RBTreeNode {
-public:
-	T value;
-	color_t color;
-	RBTreeNode *left;
-	RBTreeNode *right;
-	RBTreeNode *parent;
-
-	RBTreeNode() {
-		left = nullptr;
-		right = nullptr;
-		parent = nullptr;
-		color = RED;
-	}
-
-	RBTreeNode(T val, color_t col, RBTreeNode *l, RBTreeNode *r,
-			RBTreeNode *p) {
-		value = val;
-		left = l;
-		right = r;
-		parent = p;
-		color = col;
-	}
-};
-
-template<class T>
-class RBTree {
-protected:
-	RBTreeNode<T> *root;
-	RBTreeNode<T> *NIL;
-	void IndentBlock(int num);
-	void PrintTree(RBTreeNode<T>*, int, int);
-
-	void LeftRotation(RBTreeNode<T>*);
-	void RightRotation(RBTreeNode<T>*);
-	void insertFix(RBTreeNode<T>*);
-
-	void transplant(RBTreeNode<T>*, RBTreeNode<T>*);
-	void deleteFix(RBTreeNode<T>*);
-	RBTreeNode<T>* getMinNode(RBTreeNode<T>*);
-
-	void destroySubTree(RBTreeNode<T>*);
-
-public:
-	RBTree();
-	virtual ~RBTree();
-
-	void insert(T);
-	void remove(T);
-
-	bool find(const T &item);
-	RBTreeNode<T>* findNode(const T&);
-
-	void PrintTree(int Indent = 4, int Level = 0);
-};
 
 template<class T>
 RBTree<T>::RBTree() {
@@ -433,5 +380,70 @@ void RBTree<T>::PrintTree(int Indent, int Level) {
 	if (root)
 		PrintTree(root, Indent, Level);
 }
+
+
+enum color_t {
+	RED, BLACK
+// Red = 0, Black = 1
+};
+
+template<class T>
+class RBTreeNode {
+public:
+	T value;
+	color_t color;
+	RBTreeNode *left;
+	RBTreeNode *right;
+	RBTreeNode *parent;
+
+	RBTreeNode() {
+		left = nullptr;
+		right = nullptr;
+		parent = nullptr;
+		color = RED;
+	}
+
+	RBTreeNode(T val, color_t col, RBTreeNode *l, RBTreeNode *r,
+			RBTreeNode *p) {
+		value = val;
+		left = l;
+		right = r;
+		parent = p;
+		color = col;
+	}
+};
+
+
+template<class T>
+class RBTree {
+protected:
+	RBTreeNode<T> *root;
+	RBTreeNode<T> *NIL;
+	void IndentBlock(int num);
+	void PrintTree(RBTreeNode<T>*, int, int);
+
+	void LeftRotation(RBTreeNode<T>*);
+	void RightRotation(RBTreeNode<T>*);
+	void insertFix(RBTreeNode<T>*);
+
+	void transplant(RBTreeNode<T>*, RBTreeNode<T>*);
+	void deleteFix(RBTreeNode<T>*);
+	RBTreeNode<T>* getMinNode(RBTreeNode<T>*);
+
+	void destroySubTree(RBTreeNode<T>*);
+
+public:
+	RBTree();
+	virtual ~RBTree();
+
+	void insert(T);
+	void remove(T);
+
+	bool find(const T &item);
+	RBTreeNode<T>* findNode(const T&);
+
+	void PrintTree(int Indent = 4, int Level = 0);
+};
+
 
 #endif /* RBTREE_H_ */
