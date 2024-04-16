@@ -8,8 +8,7 @@ using namespace std;
 
 /*
 --------------------------------------------------------------------------------------
-Annotated Code for AVL Trees. Comments are added on functions that will be tested,
-and the rest is placed at the bottom,
+Annotated Code for AVL Trees. Comments are added on functions that will be tested
 --------------------------------------------------------------------------------------
 */
 
@@ -167,7 +166,7 @@ template <class T> bool AVLTree<T>::searchNode(T item) {
 template <class T> void AVLTree<T>::remove(T item) { deleteNode(item, root); }
 
 //Deletes a given node, if it is present
-//UPDATE 4/14/24: I cannot tackle this today, I will try to tomorrow though. Current comments are made by professor
+//Comments added by professor are sufficient. If I get tested on this i'm cooked
 template <class T> void AVLTree<T>::deleteNode(T item, TreeNode *&nodePtr) {
   if (!nodePtr)
     return;
