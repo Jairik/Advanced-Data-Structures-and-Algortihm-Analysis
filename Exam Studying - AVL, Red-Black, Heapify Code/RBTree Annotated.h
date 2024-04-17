@@ -45,9 +45,10 @@ void RBTree<T>::destroySubTree(RBTreeNode<T> *nodePtr) {
 template<class T>
 void RBTree<T>::insert(T val) {
 	RBTreeNode<T> *newnode = new RBTreeNode<T>(val, RED, NIL, NIL, NIL);
-	RBTreeNode<T> *y = NIL;
-	RBTreeNode<T> *x = root;
+	RBTreeNode<T> *y = NIL; //parent
+	RBTreeNode<T> *x = root; //currentNode
 
+	//Searching the tree
 	while (x != NIL) {
 		y = x;
 		if (val < x->value)
@@ -55,10 +56,12 @@ void RBTree<T>::insert(T val) {
 		else
 			x = x->right;
 	}
+
 	newnode->parent = y;
-	if (y == NIL)
+	//Getting location to insert the node
+	if (y == NIL) //case for inserting root
 		root = newnode;
-	else if (newnode->value < y->value)
+	else if (newnode->value < y->value) 
 		y->left = newnode;
 	else
 		y->right = newnode;
@@ -151,6 +154,7 @@ RBTreeNode<T>* RBTree<T>::getMinNode(RBTreeNode<T> *x) {
  */
 template<class T>
 void RBTree<T>::remove(T val) {
+
 	RBTreeNode<T> *z = findNode(val);
 	if (z == NIL)
 		return;

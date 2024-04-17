@@ -46,6 +46,21 @@ private:
   bool isBST(TreeNode *);
   void PrintTreeHB(TreeNode *, int, int);
 
+  /*Description: Helper function that recursively adds the depth of all nodes
+  Parameters: TreeNode *nodePtr - The current node in the iteration
+  int currentDepth - The current depth at the given node
+  Return: int: IPL (current Internal Path Length)
+  Notes: Implemented here for ease */
+  int calculateIPL(TreeNode *nodePtr, int currentDepth) {
+    //Check for null case
+    if (nodePtr == nullptr) {
+      return 0;
+    }
+
+    //Recursively returns the sum (depth) of all path lengths
+    return currentDepth + calculateIPL(nodePtr->left, currentDepth+1) + calculateIPL(nodePtr->right, currentDepth+1);
+  }
+
 public:
   AVLTree() { root = nullptr; }
   ~AVLTree() { destroySubTree(root); }
@@ -68,6 +83,15 @@ public:
   bool isBalanced();
   bool isBST();
   void PrintTreeHB(int Indent = 4, int Level = 0);
+
+  /*Description: Public function that calls the calculateIPL helper function
+  Parameters: N/A
+  Return: int: IPL (current Internal Path Length)
+  Notes: Implemented here for ease */
+  int getIPL() {
+    return calculateIPL(root, 0);
+  }
+
 };
 
 /*

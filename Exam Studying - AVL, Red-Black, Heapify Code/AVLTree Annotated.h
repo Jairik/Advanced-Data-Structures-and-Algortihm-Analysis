@@ -72,7 +72,7 @@ template <class T> int AVLTree<T>::getBalanceFactor(TreeNode *nodePtr) {
 /*Given a node, will apply one of the four cases:
     1) BF > 1 (Left Heavy) & BF of left subtree >= 0
         -> Right Rotation
-    2) BF > 1 (Left Heav) & BF of left subtree < 0
+    2) BF > 1 (Left Heavy) & BF of left subtree < 0
         -> Left Rotation on left subtree
         -> Right Rotation
     3) BF < -1 & BF of right subtree <= 0 

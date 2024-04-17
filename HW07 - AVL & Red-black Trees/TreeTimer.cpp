@@ -7,17 +7,11 @@
 #include <cmath>
 #include "RBTree.h" //header file for Red-Black Tree
 #include "AVLTree.h" //header file for AVL Tree
-//Packages used for awaiting for user input
-#include <thread> 
-#include <mutex> 
-#include <condition_variable>
 
 using namespace std;
 
 //Function that asks the user if they woud like to loop again
 bool getLoopAgain();
-//Helper function to getLoopAgain
-void getInput(mutex &, bool &, condition_variable &);
 
 
 int main() {
@@ -27,8 +21,8 @@ int main() {
     AVLTree<int> avl;
     RBTree<int> rb;
     //Makng other relevant variables
-    int numNodes, lowerBound, upperBound, cycles, randNum, IPL;
-    double averageIPL;
+    int numNodes, lowerBound, upperBound, cycles, randNum, avlIPL, rbIPL;
+    double averageAVLIPL, averageRBIPL;
     bool loopAgain = false, nodeFound = false;
     cout << "Welcome to JJ's Tree Timer!" << endl;
 
@@ -44,7 +38,8 @@ int main() {
         cout << "Now, enter the number of Cycles: ";
         cin >> cycles;
 
-        //----------------------AVL-Tree-----------
+        /*----------------------AVL-Tree----------------------*/
+
         cout << "Timing Now..." << endl;
         cout << "------------------------" << endl << "AVL Tree: " << endl;
         //Starting the timer
@@ -52,20 +47,20 @@ int main() {
 
         //Inserting nodes
         for(int i = 0; i < numNodes; i++) {
-            avl.insertNode((rand()%upperBound-lowerBound+1)+lowerBound); //insert a random node into the tree
+            avl.insertNode(rand()%(upperBound-lowerBound+1)+lowerBound); //insert a random node into the tree
         }
 
         //Find the average IPL and print it to the screen
-        IPL = 1; //avl.getIPL(); //Set to 1 for testing
-        averageIPL = (double)IPL/numNodes; //should cast to a double
-        cout << "Average IPL prior to cycles: " << averageIPL;
+        avlIPL = avl.getIPL(); //Set to 1 for testing
+        averageAVLIPL = (double)avlIPL/numNodes; //should cast to a double
+        cout << "Average IPL prior to cycles: " << averageAVLIPL << endl;
 
         //Running insertion + deletion cycles
         for(int i = 0; i < cycles; i++) {
-            avl.insertNode((rand()%upperBound-lowerBound+1)+lowerBound);
+            avl.insertNode(rand()%(upperBound-lowerBound+1)+lowerBound);
             nodeFound = false;
             while(!nodeFound) { //Checking if it is found. If it is not, try again.
-                randNum = (rand()%upperBound-lowerBound+1)+lowerBound;
+                randNum = rand()%(upperBound-lowerBound+1)+lowerBound;
                 if(avl.searchNode(randNum)) {
                     avl.remove(randNum);
                     nodeFound = true;
@@ -74,31 +69,77 @@ int main() {
         }
 
         //Find the average IPL after the cycles and print it to the screen
-        IPL = 1; //avl.getIPL(); //Set to 1 for testing
-        averageIPL = (double)IPL/numNodes; //should cast to a double
-        cout << "Average IPL after cycles: " << averageIPL;
+        avlIPL = avl.getIPL(); 
+        averageAVLIPL = (double)avlIPL/numNodes; //should cast to a double
+        cout << "Average IPL after cycles: " << averageAVLIPL << endl;
 
         //End the timer and print the time
         auto endAVLTimer = std::chrono::high_resolution_clock::now();
 	    auto timeElaspedAVL = (chrono::duration_cast<chrono::microseconds>(endAVLTimer-startAVLTimer)).count();
-   	    double tElaspedAVL = static_cast<double>(timeElaspedAVL) /1000000.0; //convert to seconds
-        cout << "Time Elasped for " << numNodes << " nodes and " << cycles << " cycles: " << timeElaspedAVL << endl;
+   	    double tElapsedAVL = static_cast<double>(timeElaspedAVL) /1000000.0; //convert to seconds
+        cout << endl << "Time Elasped for " << numNodes << " nodes and " << cycles << " cycles: " << tElapsedAVL << " seconds" << endl << endl;
+
+
+        /*----------------------Red-Black-Tree----------------------*/
+
+        cout << "------------------------" << endl << "Red-Black Tree: " << endl;
+        //Starting the timer
+        auto startRBTimer = chrono::high_resolution_clock::now();
+
+        //Inserting nodes
+        for(int i = 0; i < numNodes; i++) {
+            rb.insert(rand()%(upperBound-lowerBound+1)+lowerBound); //insert a random node
+        }
+
+        //Find the average IPL and print it to the screen
+        rbIPL = rb.getIPL(); //Set to 1 for testing
+        averageRBIPL = (double)rbIPL/numNodes; //should cast to a double
+        cout << "Average IPL prior to cycles: " << averageRBIPL << endl;
+
+        //Running insertion + deletion cycles
+        for(int i = 0; i < cycles; i++) {
+            rb.insert(rand()%(upperBound-lowerBound+1)+lowerBound);
+            nodeFound = false;
+            while(!nodeFound) { //Checking if it is found. If it is not, try again.
+                randNum = rand()%(upperBound-lowerBound+1)+lowerBound;
+                if(rb.find(randNum)) {
+                    rb.remove(randNum);
+                    nodeFound = true;
+                }
+            }
+        }
+
+        //Find the average IPL after the cycles and print it to the screen
+        rbIPL = rb.getIPL();
+        averageRBIPL = (double)rbIPL/numNodes; //should cast to a double
+        cout << "Average IPL after cycles: " << averageRBIPL << endl;
+
+        //End the timer and print the time
+        auto endRBTimer = std::chrono::high_resolution_clock::now();
+	    auto timeElaspedRB = (chrono::duration_cast<chrono::microseconds>(endRBTimer-startRBTimer)).count();
+   	    double tElapsedRB = static_cast<double>(timeElaspedRB) /1000000.0; //convert to seconds
+        cout << endl << "Time Elasped for " << numNodes << " nodes and " << cycles << " cycles: " << tElapsedRB << " seconds" << endl;    
 
         loopAgain = getLoopAgain();
     }
     while(loopAgain);
+    cout << "See ya soon!" << endl;
 }
 
-/*
-template <class T>
-void cycle(int n, int lower, int upper, T tree) {
-    for(int i = 0; i < n; i++) {
-        tree.insert((rand()%upper-lower+1)+lower); //insert a random node into the tree
-        tree.delete((rand()%upper-lower+1)+lower); //delete a random node from the tree
+bool getLoopAgain() {
+    char c;
+    bool lAgain = false;
+    cout << "Would you like to play again (Y/N)? ";
+    cin >> c;
+    if(c == 'y' || c == 'Y') {
+        lAgain = true;
     }
-} */
+    return lAgain;
+}
 
-//SILLY COMMENTS
+
+/* This didn't quite work as expected, I am going to keep it here because I would love to implement it
+later in the future. For now, however, I will go for something more basic.
 bool getLoopAgain() {
     //Variables used with helper getInput function
     mutex mtx; 
@@ -122,7 +163,6 @@ bool getLoopAgain() {
     return inputReceived;
 }
 
-//SIlly Comments
 void getInput(mutex &mtx, bool &inputReceived, condition_variable &conditionVariable) {
     //Waiting to receive input
     char input;
@@ -133,4 +173,4 @@ void getInput(mutex &mtx, bool &inputReceived, condition_variable &conditionVari
         inputReceived = true;
         conditionVariable.notify_one();
     }
-}
+} */
