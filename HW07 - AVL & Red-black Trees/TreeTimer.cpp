@@ -1,4 +1,4 @@
-/* Top Comments Here*/
+//Author: JJ McCauley
 
 //Packages & header files used for timing trees
 #include <iostream>
@@ -23,10 +23,10 @@ int main() {
     //Makng other relevant variables
     int numNodes, lowerBound, upperBound, cycles, randNum, avlIPL, rbIPL;
     double averageAVLIPL, averageRBIPL;
-    bool loopAgain = false, nodeFound = false;
+    bool loopAgain = true, nodeFound = false;
     cout << "Welcome to JJ's Tree Timer!" << endl;
 
-    do {
+    while(loopAgain) {
         //Getting numNodes, lowerBound, upperBoard, and cycles
         cout << "Enter the amount of nodes that you would like to insert: ";
         cin >> numNodes; 
@@ -120,16 +120,20 @@ int main() {
    	    double tElapsedRB = static_cast<double>(timeElaspedRB) /1000000.0; //convert to seconds
         cout << endl << "Time Elasped for " << numNodes << " nodes and " << cycles << " cycles: " << tElapsedRB << " seconds" << endl;    
 
+        /* --- Ask user if they would like to loop again ---*/
         loopAgain = getLoopAgain();
     }
-    while(loopAgain);
     cout << "See ya soon!" << endl;
 }
 
+/*Description: Helper function that asks the user if they would like to loop again, returning the result
+  Parameters: N/A
+  Return: int: bool lAgain: If the user would like to play again
+  Notes: N/A */
 bool getLoopAgain() {
     char c;
     bool lAgain = false;
-    cout << "Would you like to play again (Y/N)? ";
+    cout << "Would you like to loop again (Y/N)? ";
     cin >> c;
     if(c == 'y' || c == 'Y') {
         lAgain = true;
