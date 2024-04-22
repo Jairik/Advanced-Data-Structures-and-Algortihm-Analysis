@@ -3,6 +3,7 @@
 
 #include "RBTree.h"
 #include <vector>
+#include <iostream>
 
 /* ---------------------------- Set Header File ---------------------------- 
    Author: JJ McCauley
@@ -20,15 +21,19 @@
         ~Set();
         Set(const Set &);
         Set<T>& operator=(const Set<T>);
-        void Clear(); //Clears the set
+        void clear(); //Clears the set
         int getSize(); //Gets the size of the set
         bool find(T); //Searches the set for a given element
         bool isEmpty(); //Determines if the set is empty
+        vector<T> toVector();
+        T *toArray();
+        void erase(T);
+        void insert(T) override;
+
     private:
         int size; //Increments or decrements based on insertions
         T *getInorder(); //Returns array of inordered elements 
-        void getInorderHelper(RBTreeNode<T>, int *&, int); //Helper function that recursively iterates through the tree in-order
-        void printInOrder(); //Prints the set's elements in-order
+        void getInOrderHelper(RBTreeNode<T>, T *&, int) //Helper function that recursively iterates through the tree in-order
         void sizeHelper(int &); //Helper function that transverses through the tree and increments size
    };
 
@@ -66,8 +71,8 @@
     Parameters: N/A
     Method: Destroy the current subtree */
     template <class T>
-    void Set<T>::Clear() {
-        destroySubTree(this->root);
+    void Set<T>::clear() {
+        destroySubTree(root);
         size = 0; 
     }
 
@@ -77,8 +82,8 @@
     template <class T>
     T Set<T>::*getInOrder() {
         int numElements = getSize(); //Get the number of elements to allocate array
-        int *elementArray = new int[numElements]; //Allocating space for elements
-        getInOrderHelper(this.root, elementArray, 0); //Get the in-order array
+        T *elementArray = new int[numElements]; //Allocating space for elements
+        getInOrderHelper(root, elementArray, 0); //Get the in-order array
         return elementArray; //Returns the sorted in-order array
     }
 
@@ -88,7 +93,7 @@
     int iterator - the current point in the array
     Returns: An array of in-order elements */
     template <class T>
-    void Set<T>::getInOrderHelper(RBTreeNode<T> nodePtr, int *&elementArray, int iterator) {
+    void Set<T>::getInOrderHelper(RBTreeNode<T> nodePtr, T *&elementArray, int iterator) {
         if (nodePtr) {
 		    getInOrderHelperInOrder(nodePtr->left);
 		    elementArray[iterator++] = nodePtr->value;
@@ -110,10 +115,84 @@
         return findNode(element); //Calls function from RBTree
     }
 
-    /* isEmtpy function - returns if the set is empty */
+    /* isEmpty function - returns if the set is empty */
     template <class T>
     bool Set<T>::isEmpty() {
         return(root); //Returns if the root is found
+    }
+
+    /* toVector function - converts a set to a vector 
+    Returns: The set as a vector
+    Method: Call the getInOrder function, then convert to a vector */
+    template <class T>
+    vector<T> Set<T>::toVector() {
+        T *setAsArray = getInOrder();
+        vector<T> vectorToReturn;
+        int size = getSize();
+        for(int i = size; i < 0; i--) {
+            vectorToReturn.push_back(setAsArray[i]);
+        }
+    }
+
+    /* toArray function - converts a set to an array 
+    Returns: The set as an array
+    Method: Call the getInOrder function */
+    template <class T>
+    T* Set<T>::toArray() {
+        return getInOrder();
+    }
+
+    /* erase function - deletes an element from the set 
+    Parameter: The value to delete
+    Method: Call the delete function from RBTree, then decrement size */
+    template <class T>
+    void Set<T>::erase(T elementToDelete) {
+        if(find(elementToDelete)) { //If the element is in the set
+            remove(elementToDelete);
+            --size;
+        }
+        else { //If it is not in the set
+            std::cout << "Element is not in the set" << std::endl;
+        }
+    }
+
+    /* insert function - inserts an element into the set 
+    Parameters: The value of the element to insert
+    Method: Overrides the Red-Black Tree's insert method to ensure no duplicate elements*/
+    template <class t>
+    void insert(T elementToInsert) override {
+        RBTreeNode<T> *newnode = new RBTreeNode<T>(val, RED, NIL, NIL, NIL);
+        RBTreeNode<T> *y = NIL;
+        RBTreeNode<T> *x = root;
+
+        while (x != NIL) {
+            y = x;
+            if (val < x->value){
+                x = x->left;
+            }
+            else if (val > x->value) {
+                x = x->right;
+            }
+            else { //val == x
+                std::cout << "Set does not allow for duplicate node" << std::endl;
+                delete newNode;
+                return;
+            }
+        }
+        newnode->parent = y;
+        if (y == NIL) {
+            root = newnode;
+        }
+        else if (newnode->value < y->value) {
+            y->left = newnode;
+        }
+        else {
+            y->right = newnode;
+        }
+
+        ++size;
+        //  Adjust the RB tree to retain the properties.
+        insertFix(newnode);
     }
 
     

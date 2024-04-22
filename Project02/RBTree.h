@@ -63,7 +63,7 @@ public:
 	virtual ~RBTree();
 	RBTree(const RBTree<T> &); //Copy contructor
 
-	void insert(T);
+	virtual void insert(T);
 	void remove(T);
 
 	bool findNode(const T &item);
