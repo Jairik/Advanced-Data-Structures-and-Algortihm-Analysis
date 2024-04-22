@@ -29,6 +29,8 @@
         T *toArray();
         void erase(T);
         void insert(T) override;
+        boolean operator==(const Set<T>); 
+        boolean operator!=(const Set<T>);
 
     private:
         int size; //Increments or decrements based on insertions
@@ -36,8 +38,6 @@
         void getInOrderHelper(RBTreeNode<T>, T *&, int) //Helper function that recursively iterates through the tree in-order
         void sizeHelper(int &); //Helper function that transverses through the tree and increments size
    };
-
-   //Implementations here
 
     //Default Constructor
     template <class T> 
@@ -196,6 +196,42 @@
     }
 
     
+    boolean Set<T>::operator==(const Set<T> rightSide) {
+        if(this.size != rightSide.size) { //If the sizes are not equal, we can skip the rest
+            return false;
+        }
+        RBTreeNode<T> *leftNodePtr = this.root;
+        RBTreeNode<T> *leftNILL = this.NIL;
+        RBTreeNode<T> *rightNodePtr = rightSide.root;
+        RBTreeNode<T> *rightNILL = rightSide.NIL;
+        return equalsOperatorHelper(leftNodePtr, leftNILL, rightNodePtr, rightNILL);
+    }
+        
+      
+    boolean Set<T>::operator!=(const Set<T> rightSide) {
+        if(this.size != rightSide.size) { //If the sizes are not equal, we can skip the rest
+            return true;
+        }
+        RBTreeNode<T> *leftNodePtr = this.root;
+        RBTreeNode<T> *leftNILL = this.NIL;
+        RBTreeNode<T> *rightNodePtr = rightSide.root;
+        RBTreeNode<T> *rightNILL = rightSide.NIL;
+        return !(equalsOperatorHelper(leftNodePtr, leftNILL, rightNodePtr, rightNILL));
+    }
+
+    /* equalsOperatorHelper - searches through the two trees in-order, and returns true if they are equal
+    Parameters: lNodePtr: Pointer to current spot in left set
+    lNILL: Pointer to NILL in left set
+    rNodePtr: Pointer to current spot in right set
+    rNILL: Pointer to NILL in right set*/
+    template <class T>
+    boolean Set<T>::equalsOperatorHelper(RBTreeNode<T> *lNodePtr, RBTreeNode<T> *lNILL, RBTreeNode<T> *rNodePtr, RBTreeNode<T> *lNILL) {
+        if (lnodePtr) {
+		    getInOrderHelperInOrder(nodePtr->left);
+		    elementArray[iterator++] = nodePtr->value;
+		    displayInOrder(nodePtr->right);
+	    } 
+    }
 
 
 #endif 
