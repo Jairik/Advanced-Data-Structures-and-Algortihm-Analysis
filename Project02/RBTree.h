@@ -56,7 +56,7 @@ protected:
 
 	void destroySubTree(RBTreeNode<T> *);
 
-	void copy(RBTreeNode<T> *, RBTreeNode<T> *); //Helper function for copy constructor
+	RBTreeNode<T> *copy(RBTreeNode<T> *, RBTreeNode<T> *); //Helper function for copy constructor
 
 	/*Description: Helper function that recursively adds the depth of all nodes
 	Parameters: TreeNode *nodePtr - The current node in the iteration
@@ -101,14 +101,14 @@ template <class T>
 RBTree<T>::RBTree(const RBTree<T> &copy) {
 	RBTreeNode<T> *nodePtr = copy.root;
    RBTreeNode<T> *NILPtr = copy.NIL;
-	copy(nodePtr, NILPtr); //Invokes helper function
+	root = copy(nodePtr, NILPtr); //Invokes helper function
 }
 
 /* Helper function for copy contructor, will recursively insert nodes into RB Tree
    Parameters: nodePtr to copied tree
    NILPtr that points to the NIL node of the copied tree */
    template <class T>
-   void RBTree<T>::copy(RBTreeNode<T> *nodePtr, RBTreeNode<T> *NILPtr) {
+   RBTreeNode<T> *RBTree<T>::copy(RBTreeNode<T> *nodePtr, RBTreeNode<T> *NILPtr) {
       if (nodePtr == NILPtr) { //base case
          return NIL;
       }
