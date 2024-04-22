@@ -20,31 +20,34 @@
         ~Set();
         Set(const Set &);
         Set<T>& operator=(const Set<T>);
-        void Clear(); //Clears the current tree
+        void Clear(); //Clears the set
+        int getSize(); //Gets the size of the set
+        bool find(T); //Searches the set for a given element
+        bool isEmpty(); //Determines if the set is empty
     private:
+        int size; //Increments or decrements based on insertions
         T *getInorder(); //Returns array of inordered elements 
         void getInorderHelper(RBTreeNode<T>, int *&, int); //Helper function that recursively iterates through the tree in-order
         void printInOrder(); //Prints the set's elements in-order
-        T* searchInOrder(); //Searches the array in-order
+        void sizeHelper(int &); //Helper function that transverses through the tree and increments size
    };
 
    //Implementations here
 
     //Default Constructor
     template <class T> 
-    Set<T>::Set() {
-        //Make a new set object
-    }
+    Set<T>::Set() { size = 0; }
 
     //Default Deconstructor - Automatically called
     template <class T>
-    Set<T>::~Set() {}
+    Set<T>::~Set() { size = 0; }
 
     /*Copy Constructor - Copies a given Set
     Parameters: The set to be copied */
     template <class T>
     Set<T>::Set(const Set<T> &copy) : RBTree<T>(copy) {
         //Will automatically call the RBTree copy contructor
+        this.size = copy.size;
     }
 
     /*Overloaded Assignment Operator
@@ -55,6 +58,7 @@
         clear(); 
         RBTreeNode<T> *tempPtr; //Temp ptr so the copy function can return something
         tempPtr = this.copy(rightSet.root, rightSet.NIL);
+        this.size = rightSet.size; //Setting the sizes to be equal
         return *this; //Return the current tree
     }
 
@@ -63,7 +67,8 @@
     Method: Destroy the current subtree */
     template <class T>
     void Set<T>::Clear() {
-        destroySubTree(this->root); 
+        destroySubTree(this->root);
+        size = 0; 
     }
 
     /* getInOrder function - returns an array of in-order elements
@@ -71,7 +76,7 @@
     Returns: An array of in-order elements */
     template <class T>
     T Set<T>::*getInOrder() {
-        int numElements = size(); //Get the number of elements to allocate array
+        int numElements = getSize(); //Get the number of elements to allocate array
         int *elementArray = new int[numElements]; //Allocating space for elements
         getInOrderHelper(this.root, elementArray, 0); //Get the in-order array
         return elementArray; //Returns the sorted in-order array
@@ -92,13 +97,23 @@
     }
 
     /* Size function - returns the size of the tree
-    Returns: the size of the set
-    Methods: Calls the sizeHelper function */
+    Returns: the size of the set */
     template <class T>
-    int Set<T>::size() {
-        int size = 0;
-        sizeHelper(size); //Modify size by reference
+    int Set<T>::getSize() {
         return size;
+    }
+
+    /* Find function - returns whether a given element was found
+    Parameter: T element - the element to search for*/
+    template <class T>
+    bool Set<T>::find(T element) {
+        return findNode(element); //Calls function from RBTree
+    }
+
+    /* isEmtpy function - returns if the set is empty */
+    template <class T>
+    bool Set<T>::isEmpty() {
+        return(root); //Returns if the root is found
     }
 
     
