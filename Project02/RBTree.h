@@ -1,5 +1,5 @@
 /* ---------------------------- RBTree Header File ---------------------------- 
-   This provided code will be used to implement Sets, Multisets, and Multimaps
+   This provided code will inhertied to implement Sets, Multisets, and Multimaps.
    ---------------------------------------------------------------------------- */
 
 #ifndef RBTREE_H_
@@ -54,7 +54,9 @@ protected:
 	void deleteFix(RBTreeNode<T>*);
 	RBTreeNode<T>* getMinNode(RBTreeNode<T>*);
 
-	void destroySubTree(RBTreeNode<T>*);
+	void destroySubTree(RBTreeNode<T> *);
+
+	void copy(RBTreeNode<T> *, RBTreeNode<T> *); //Helper function for copy constructor
 
 	/*Description: Helper function that recursively adds the depth of all nodes
 	Parameters: TreeNode *nodePtr - The current node in the iteration
@@ -73,6 +75,7 @@ protected:
 public:
 	RBTree();
 	virtual ~RBTree();
+	RBTree(const RBTree<T> &); //Copy contructor
 
 	void insert(T);
 	void remove(T);
@@ -87,10 +90,44 @@ public:
   Return: int: IPL (current Internal Path Length)
   Notes: Implemented here for ease */
   int getIPL() {
-    return calculateIPL(root, 0);
+	return calculateIPL(root, 0);
   }
 
 };
+
+/* Copy contructor for tree 
+  Parameters: Tree to be copied */
+template <class T>
+RBTree<T>::RBTree(const RBTree<T> &copy) {
+	RBTreeNode<T> *nodePtr = copy.root;
+   RBTreeNode<T> *NILPtr = copy.NIL;
+	copy(nodePtr, NILPtr); //Invokes helper function
+}
+
+/* Helper function for copy contructor, will recursively insert nodes into RB Tree
+   Parameters: nodePtr to copied tree
+   NILPtr that points to the NIL node of the copied tree */
+   template <class T>
+   void RBTree<T>::copy(RBTreeNode<T> *nodePtr, RBTreeNode<T> *NILPtr) {
+      if (nodePtr == NILPtr) { //base case
+         return NIL;
+      }
+      //Creating a new Node in this RBT to insert
+      RBTreeNode<T> *newNode = new RBTreeNode<T>();
+      //Copying the values of the node from the copied tree
+      newNode->value = nodePtr->value;
+      newNode->left = copy(nodePtr->left);
+      newNode->right = copy(nodePtr->right);
+      newNode->color = nodePtr->color;
+      //Ensuring that the parent pointers are correctly set up
+      if (nodePtr->left != NIL) {
+         newNode->left->parent = newNode;
+      }
+      if (nodePtr->right != NIL) {
+         newNode->right->parent = newNode;
+      }
+      delete nodePtr;
+   }
 
 template<class T>
 RBTree<T>::RBTree() {

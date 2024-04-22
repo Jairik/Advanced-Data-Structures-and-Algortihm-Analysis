@@ -1,10 +1,10 @@
-#ifndef MULTIMAP_H
-#define MULTIMAP_H
+#ifndef MAP_H
+#define MAP_H
 
 #include "RBTree.h"
 #include <vector>
 
-/* -------------------------- Multimap Header File ---------------------------- 
+/* ---------------------------- Map Header File ------------------------------- 
    Author: JJ McCauley
    Creation Date: 4/18/24
    Last Update: 4/18/24
@@ -13,7 +13,7 @@
    ---------------------------------------------------------------------------- */
 
 template <class T>
-class Multimap : public RBTree<T> {
+class Map : public RBTree<T> {
     public:
         //Member variables (if any)
         //Member functions

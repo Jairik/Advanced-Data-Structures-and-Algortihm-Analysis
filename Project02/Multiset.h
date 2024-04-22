@@ -1,3 +1,9 @@
+#ifndef MULTISET_H
+#define MULTISET_H
+
+#include "RBTree.h"
+#include <vector>
+
 /* -------------------------- Multiset Header File ---------------------------- 
    Author: JJ McCauley
    Creation Date: 4/18/24
@@ -6,7 +12,8 @@
    Notes: <Any notes that a user of the program should know about>
    ---------------------------------------------------------------------------- */
 
-class Multiset {
+template <class T>
+class Multiset : public RBTree<T> {
     public:
         //Member variables (if any)
         //Member functions
@@ -15,3 +22,6 @@ class Multiset {
    };
 
    //Implementations here
+
+
+#endif
