@@ -31,12 +31,21 @@
         void insert(T) override;
         boolean operator==(const Set<T>); 
         boolean operator!=(const Set<T>);
+        boolean operator>(const Set<T>);
+        boolean operator<(const Set<T>);
+        boolean operator>=(const Set<T>);
+        boolean operator<=(const Set<T>);
+        Set<T>& operator+(const Set<T>); //Set union
+        Set<T>& operator*(const Set<T>); //Set intersection
+        Set<T>& operator-(const Set<T>); //Set difference
+        ostream& operator<<(std::ostream&, const Set<T>&);
 
     private:
         int size; //Increments or decrements based on insertions
         T *getInorder(); //Returns array of inordered elements 
         void getInOrderHelper(RBTreeNode<T>, T *&, int) //Helper function that recursively iterates through the tree in-order
         void sizeHelper(int &); //Helper function that transverses through the tree and increments size
+        boolean equalsOperatorHelper(RBTreeNode<T> *, RBTreeNode<T> *, RBTreeNode<T> *, RBTreeNode<T> *);
    };
 
     //Default Constructor
@@ -97,7 +106,7 @@
         if (nodePtr) {
 		    getInOrderHelperInOrder(nodePtr->left);
 		    elementArray[iterator++] = nodePtr->value;
-		    displayInOrder(nodePtr->right);
+		    getInOrderHelperInOrder(nodePtr->right);
 	    } 
     }
 
@@ -225,13 +234,141 @@
     rNodePtr: Pointer to current spot in right set
     rNILL: Pointer to NILL in right set*/
     template <class T>
-    boolean Set<T>::equalsOperatorHelper(RBTreeNode<T> *lNodePtr, RBTreeNode<T> *lNILL, RBTreeNode<T> *rNodePtr, RBTreeNode<T> *lNILL) {
-        if (lnodePtr) {
-		    getInOrderHelperInOrder(nodePtr->left);
-		    elementArray[iterator++] = nodePtr->value;
-		    displayInOrder(nodePtr->right);
-	    } 
+    boolean Set<T>::equalsOperatorHelper(RBTreeNode<T> *lNodePtr, RBTreeNode<T> *lNILL, RBTreeNode<T> *rNodePtr, RBTreeNode<T> *rNILL) {
+        //Base case
+        if(lNodePtr == rNILL && rNodePtr == lNILL) {
+            return true;
+        }
+
+        //Else, if one is NILL and one is not, return false
+        else if(lNodePtr == rNILL || rNodePtr == lNILL) {
+            return false;
+        }
+        //Check the left subtrees for equality
+        bool leftSubtreeEqual = equalsOperatorHelper(lNodePtr->left, lNILL, rNodePtr->left, rNILL);
+        if(!leftSubTreeEqual) {
+            return false;
+        }
+
+        //Check the current node for equality
+        if (lNodePtr->value != rNodePtr->value) {
+            return false;
+        }
+
+        //Check the right subtrees for equality
+        bool rightSubtreeEqual = equalsOperatorHelper(lNodePtr->right, lNILL, rNodePtr->right, rNILL);
+        return rightSubtreeEqual;  
     }
 
+    /* Operator < overload - Returns whether leftSide is strict subset of rightSide
+    Method: Store both sets as an array, then compare results. Could be optimized*/
+    template <class T>
+    boolean Set<T>::operator<(const Set<T> rightSide) {
+        //If leftSide size is equal or greater, then it cannot be a strict subset and we can skip remaining steps
+        int leftSize = this.size;
+        int rightSize = rightSide.size;
+        if (leftSize >= rightSize) {
+            return false;
+        }
+        T *leftArray = this.getInOrder();
+        T *rightArray = rightSide.getInOrder();
+        int leftIterator = 0;
+        for(int i = 0; i < rightSize, i++) {
+            if(leftArray[leftIterator] == rightArray[i]) {
+                leftIterator++;
+            }
+        }
+        delete leftArray; //Freeing up memory
+        delete rightArray;
+        if(leftIterator == leftSize) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    /* Operator > overload - Returns whether rightSide is strict subset of leftSide
+    Method: Store both sets as an array, then compare results. Could be optimized*/
+    template <class T>
+    boolean Set<T>::operator>(const Set<T> rightSide) {
+        //If rightSide size is equal or greater, then it cannot be a strict subset and we can skip remaining steps
+        int leftSize = this.size;
+        int rightSize = rightSide.size;
+        if (leftSize <= rightSize) {
+            return false;
+        }
+        T *leftArray = this.getInOrder();
+        T *rightArray = rightSide.getInOrder();
+        int rightIterator = 0;
+        for(int i = 0; i < leftSize, i++) {
+            if(leftArray[i] == rightArray[rightIterator]) {
+                rightIterator++;
+            }
+        }
+        delete leftArray; //Freeing up memory
+        delete rightArray;
+        if(rightIterator == rightSize) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    /* Operator <= overload - Returns whether leftSide is subset of rightSide
+    Method: Store both sets as an array, then compare results. Could be optimized*/
+    template <class T>
+    boolean Set<T>::operator<=(const Set<T> rightSide) {
+        int leftSize = this.size;
+        int rightSize = rightSide.size;
+        T *leftArray = this.getInOrder();
+        T *rightArray = rightSide.getInOrder();
+        int leftIterator = 0;
+        for(int i = 0; i < rightSize, i++) {
+            if(leftArray[leftIterator] == rightArray[i]) {
+                leftIterator++;
+            }
+        }
+        delete leftArray; //Freeing up memory
+        delete rightArray;
+        if(leftIterator == leftSize) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    /* Operator > overload - Returns whether rightSide is subset of leftSide
+    Method: Store both sets as an array, then compare results. Could be optimized*/
+    template <class T>
+    boolean Set<T>::operator>=(const Set<T> rightSide) {
+        int leftSize = this.size;
+        int rightSize = rightSide.size;
+        T *leftArray = this.getInOrder();
+        T *rightArray = rightSide.getInOrder();
+        int rightIterator = 0;
+        for(int i = 0; i < leftSize, i++) {
+            if(leftArray[i] == rightArray[rightIterator]) {
+                rightIterator++;
+            }
+        }
+        delete leftArray; //Freeing up memory
+        delete rightArray;
+        if(rightIterator == rightSize) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    /* Operator + overload - returns the union of two elements 
+    Method: */
+    template <class T>
+    Set<T> Set<T>::operator+(const Set<T> rightSide) {
+        
+    }
 
 #endif 
