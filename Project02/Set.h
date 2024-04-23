@@ -138,7 +138,7 @@
         T *setAsArray = getInOrder();
         vector<T> vectorToReturn;
         int size = getSize();
-        for(int i = size; i < 0; i--) {
+        for(int i = 0; i < size; i++) {
             vectorToReturn.push_back(setAsArray[i]);
         }
     }
@@ -364,11 +364,58 @@
         }
     }
 
-    /* Operator + overload - returns the union of two elements 
-    Method: */
+    /* Operator + overload - returns the union of two sets 
+    Method: Will make a new set equal to leftSide, then insert all elements from the rightSide by converting it
+    to an array. This will still maintain the set property since duplicates cannot be inserted */
     template <class T>
     Set<T> Set<T>::operator+(const Set<T> rightSide) {
+        Set<T> newSet = this;
+        T *rightArray = rightSide.getInOrder();
+        rightSize = rightSide.size;
+        for(int i = 0; i < rightSize; i++) {
+            newSet.insert(rightArray[i]);
+        }
+        delete rightArray; //Freeing up memory
+        return newSet;
+    }
+
+    /* Operator * overload - returns the intersection of two sets
+    Method: Will store the two sets as arrays, and then combine their intersections into a vector. Will then insert
+    each element of that vector onto a new set */
+    template <class T>
+    Set<T> Set<T>::operator*(const Set<T> leftSide) {
+        T *rightArray = this.getInOrder();
+        T *leftSide = leftSide.getInOrder();
+        int rightSize = this.size;
+        int leftSize = leftSide.size;
+        vector<T> newVector;
+        Set<T> newSet;
+        int i = 0; //Getting iterator for while loop
+        for(int i = 0; i < rightSize; i++) {
+            if(findInArray(rightArray[i], leftSide, leftSize)) {
+                newVector.pushBack(rightArray[i]);
+            }
+        }
+    }
+
+    /* FindInArray helper function - returns whether a given element in an array, if it exists
+    Method: will iterate through a given array until the element is found, returning the index */
+    template <class T>
+    boolean Set<T>::findInArray(T element, T *array, int arraySize) {
+        for(int i = 0; i < arraySize; i++) {
+            if(array[i] == element) {
+                return true;
+            }
+        }
+        return false; //Signal value stating that the element was not found
+    }
+
+    /* Operator - overload - returns the set difference 
+    Method: */
+    template <class T>
+    Set<T> Set<T>::operator-(const Set<T> leftSide) {
         
     }
+
 
 #endif 
