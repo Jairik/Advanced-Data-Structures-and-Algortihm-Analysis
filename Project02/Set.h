@@ -4,31 +4,47 @@
 #include "RBTree.h"
 #include <vector>
 #include <iostream>
+using namespace std; //Simplifying
 
 /* ---------------------------- Set Header File ---------------------------- 
    Author: JJ McCauley
    Creation Date: 4/18/24
    Last Update: 4/18/24
-   Description: <One paragraph describing the set of functions the file contains>
    Notes: Inherits properties from the Red-Black Tree
    ---------------------------------------------------------------------------- */
 
    template <class T>
    class Set : public RBTree<T> {
+
+    //Helper functions
+    private:
+        int size; //Increments or decrements based on insertions
+        T* getInOrder(); //Returns array of inordered elements 
+        void getInOrderHelper(RBTreeNode<T> *, RBTreeNode<T> *, T *&, int); //Helper function that recursively iterates through the tree in-order
+        void sizeHelper(int &); //Helper function that transverses through the tree and increments size
+        bool equalsOperatorHelper(RBTreeNode<T> *, RBTreeNode<T> *, RBTreeNode<T> *, RBTreeNode<T> *);
+        void getInOrderVector(RBTreeNode<T> *, RBTreeNode<T> *, vector<T> &);
+        void displayInOrder(RBTreeNode<T> *, ostream &, int &, int);
+        bool findInArray(T, T *, int);
+    
     public:
-        //Member functions
+        //Constructs and deconstructors
         Set();
         ~Set();
         Set(const Set &);
-        Set<T>& operator=(const Set<T>);
+
+        //Set-specific functions
         void clear(); //Clears the set
         int getSize(); //Gets the size of the set
         bool find(T); //Searches the set for a given element
         bool isEmpty(); //Determines if the set is empty
         vector<T> toVector();
-        T *toArray();
+        T* toArray();
         void erase(T);
         void insert(T) override;
+
+        //Operator Overloads
+        Set<T>& operator=(const Set<T> &);
         bool operator==(const Set<T>); 
         bool operator!=(const Set<T>);
         bool operator>(const Set<T>);
@@ -38,14 +54,8 @@
         Set<T>& operator+(const Set<T>); //Set union
         Set<T>& operator*(const Set<T>); //Set intersection
         Set<T>& operator-(const Set<T>); //Set difference
-        std::ostream& operator<<(std::ostream&, const Set<T>&);
+        template <class U> friend ostream& operator<<(ostream&, const Set<T>&);
 
-    private:
-        int size; //Increments or decrements based on insertions
-        T *getInorder(); //Returns array of inordered elements 
-        void getInOrderHelper(RBTreeNode<T>, T *&, int); //Helper function that recursively iterates through the tree in-order
-        void sizeHelper(int &); //Helper function that transverses through the tree and increments size
-        bool equalsOperatorHelper(RBTreeNode<T> *, RBTreeNode<T> *, RBTreeNode<T> *, RBTreeNode<T> *);
    };
 
     //Default Constructor
@@ -57,18 +67,16 @@
     Set<T>::~Set() { size = 0; }
 
     /*Copy Constructor - Copies a given Set
-    Parameters: The set to be copied */
+    Parameters: The set to be copied 
+    Notes: Will automatically call the RBTree copy constructor that I added */
     template <class T>
-    Set<T>::Set(const Set<T> &copy) : RBTree<T>(copy) {
-        //Will automatically call the RBTree copy contructor
-        this.size = copy.size;
-    }
+    Set<T>::Set(const Set<T> &copy) : RBTree<T>(copy) { this.size = copy.size; }
 
     /*Overloaded Assignment Operator
     Paramters: The set to be assigned 
     Method: Clear the current tree, then copy the current one to it*/
     template <class T>
-    Set<T> &Set<T>::operator=(const Set<T> &rightSet) {
+    Set<T>& Set<T>::operator=(const Set<T> &rightSet) {
         clear(); 
         RBTreeNode<T> *tempPtr; //Temp ptr so the copy function can return something
         tempPtr = this.copy(rightSet.root, rightSet.NIL);
@@ -81,7 +89,8 @@
     Method: Destroy the current subtree */
     template <class T>
     void Set<T>::clear() {
-        destroySubTree(this.root);
+        this->destroySubTree(this->root);
+        this->root = this->NIL;
         size = 0; 
     }
 
@@ -89,10 +98,10 @@
     Parameters: N/A
     Returns: An array of in-order elements */
     template <class T>
-    T Set<T>::*getInOrder() {
+    T* Set<T>::getInOrder() {
         int numElements = getSize(); //Get the number of elements to allocate array
-        T *elementArray = new int[numElements]; //Allocating space for elements
-        getInOrderHelper(root, elementArray, 0); //Get the in-order array
+        T *elementArray = new T[numElements]; //Allocating space for elements
+        getInOrderHelper(this->root, this->NIL, elementArray, 0); //Get the in-order array
         return elementArray; //Returns the sorted in-order array
     }
 
@@ -102,11 +111,11 @@
     int iterator - the current point in the array
     Returns: An array of in-order elements */
     template <class T>
-    void Set<T>::getInOrderHelper(RBTreeNode<T> nodePtr, T *&elementArray, int iterator) {
-        if (nodePtr) {
-		    getInOrderHelperInOrder(nodePtr->left);
+    void Set<T>::getInOrderHelper(RBTreeNode<T> *nodePtr, RBTreeNode<T> *nilPtr, T *&elementArray, int iterator) {
+        if (nodePtr != nilPtr) {
+		    getInOrderHelper(nodePtr->left);
 		    elementArray[iterator++] = nodePtr->value;
-		    getInOrderHelperInOrder(nodePtr->right);
+		    getInOrderHelper(nodePtr->right);
 	    } 
     }
 
@@ -127,7 +136,7 @@
     /* isEmpty function - returns if the set is empty */
     template <class T>
     bool Set<T>::isEmpty() {
-        return(root); //Returns if the root is found
+        return(this->root  == this->NIL); //Returns if the root is found
     }
 
     /* toVector function - converts a set to a vector 
@@ -135,11 +144,17 @@
     Method: Call the getInOrder function, then convert to a vector */
     template <class T>
     vector<T> Set<T>::toVector() {
-        T *setAsArray = getInOrder();
         vector<T> vectorToReturn;
-        int size = getSize();
-        for(int i = 0; i < size; i++) {
-            vectorToReturn.push_back(setAsArray[i]);
+        getInOrderVector(this->root, this->NIL, vectorToReturn);
+        return vectorToReturn;
+    }
+
+    template <class T>
+    void Set<T>::getInOrderVector(RBTreeNode<T> *nodePtr, RBTreeNode<T> *nilPtr, vector<T> &vector) {
+        if(nodePtr != nilPtr) {
+            getInOrderVector(nodePtr->left, nilPtr, vector);
+            vector.push_back(nodePtr->value);
+            getInOrderVector(nodePtr->right, nilPtr, vector);
         }
     }
 
@@ -161,7 +176,7 @@
             --size;
         }
         else { //If it is not in the set
-            std::cout << "Element is not in the set" << std::endl;
+            cout << "Element is not in the set" << endl;
         }
     }
 
@@ -169,84 +184,84 @@
     Parameters: The value of the element to insert
     Method: Overrides the Red-Black Tree's insert method to ensure no duplicate elements*/
     template <class T>
-    void insert(T elementToInsert) override {
-        RBTreeNode<T> *newnode = new RBTreeNode<T>(val, RED, NIL, NIL, NIL);
-        RBTreeNode<T> *y = NIL;
-        RBTreeNode<T> *x = root;
+    void Set<T>::insert(T elementToInsert) {
+        RBTreeNode<T> *newNode = new RBTreeNode<T>(elementToInsert, this->RED, this->NIL, this->NIL, this->NIL);
+        RBTreeNode<T> *y = this->NIL;
+        RBTreeNode<T> *x = this->root;
 
-        while (x != NIL) {
+        while (x != this.NIL) {
             y = x;
-            if (val < x->value){
+            if (elementToInsert < x->value){
                 x = x->left;
             }
-            else if (val > x->value) {
+            else if (elementToInsert > x->value) {
                 x = x->right;
             }
-            else { //val == x
-                std::cout << "Set does not allow for duplicate node" << std::endl;
+            else { //elementToInsert == x
+                cout << "Set does not allow for duplicate node" << endl;
                 delete newNode;
                 return;
             }
         }
-        newnode->parent = y;
-        if (y == NIL) {
-            root = newnode;
+        newNode->parent = y;
+        if (y == this->NIL) {
+            this->root = newNode;
         }
-        else if (newnode->value < y->value) {
-            y->left = newnode;
+        else if (newNode->value < y->value) {
+            y->left = newNode;
         }
         else {
-            y->right = newnode;
+            y->right = newNode;
         }
 
-        ++size;
+        this.size++;
         //  Adjust the RB tree to retain the properties.
-        RBTree<T>::insertFix(newnode);
+        RBTree<T>::insertFix(newNode);
     }
 
-    
+    template <class T>
     bool Set<T>::operator==(const Set<T> rightSide) {
-        if(this.size != rightSide.size) { //If the sizes are not equal, we can skip the rest
+        if(this->size != rightSide.size) { //If the sizes are not equal, we can skip the rest
             return false;
         }
-        RBTreeNode<T> *leftNodePtr = this.root;
-        RBTreeNode<T> *leftNILL = this.NIL;
+        RBTreeNode<T> *leftNodePtr = this->root;
+        RBTreeNode<T> *leftNIL = this->NIL;
         RBTreeNode<T> *rightNodePtr = rightSide.root;
-        RBTreeNode<T> *rightNILL = rightSide.NIL;
-        return equalsOperatorHelper(leftNodePtr, leftNILL, rightNodePtr, rightNILL);
+        RBTreeNode<T> *rightNIL = rightSide.NIL;
+        return equalsOperatorHelper(leftNodePtr, leftNIL, rightNodePtr, rightNIL);
     }
         
-      
+    template <class T>
     bool Set<T>::operator!=(const Set<T> rightSide) {
         if(this.size != rightSide.size) { //If the sizes are not equal, we can skip the rest
             return true;
         }
-        RBTreeNode<T> *leftNodePtr = this.root;
-        RBTreeNode<T> *leftNILL = this.NIL;
+        RBTreeNode<T> *leftNodePtr = this->root;
+        RBTreeNode<T> *leftNIL = this->NIL;
         RBTreeNode<T> *rightNodePtr = rightSide.root;
-        RBTreeNode<T> *rightNILL = rightSide.NIL;
-        return !(equalsOperatorHelper(leftNodePtr, leftNILL, rightNodePtr, rightNILL));
+        RBTreeNode<T> *rightNIL = rightSide.NIL;
+        return !(equalsOperatorHelper(leftNodePtr, leftNIL, rightNodePtr, rightNIL));
     }
 
     /* equalsOperatorHelper - searches through the two trees in-order, and returns true if they are equal
     Parameters: lNodePtr: Pointer to current spot in left set
-    lNILL: Pointer to NILL in left set
+    lNIL: Pointer to NIL in left set
     rNodePtr: Pointer to current spot in right set
-    rNILL: Pointer to NILL in right set*/
+    rNIL: Pointer to NIL in right set*/
     template <class T>
-    bool Set<T>::equalsOperatorHelper(RBTreeNode<T> *lNodePtr, RBTreeNode<T> *lNILL, RBTreeNode<T> *rNodePtr, RBTreeNode<T> *rNILL) {
+    bool Set<T>::equalsOperatorHelper(RBTreeNode<T> *lNodePtr, RBTreeNode<T> *lNIL, RBTreeNode<T> *rNodePtr, RBTreeNode<T> *rNIL) {
         //Base case
-        if(lNodePtr == rNILL && rNodePtr == lNILL) {
+        if(lNodePtr == rNIL && rNodePtr == lNIL) {
             return true;
         }
 
-        //Else, if one is NILL and one is not, return false
-        else if(lNodePtr == rNILL || rNodePtr == lNILL) {
+        //Else, if one is NIL and one is not, return false
+        else if(lNodePtr == rNIL || rNodePtr == lNIL) {
             return false;
         }
         //Check the left subtrees for equality
-        bool leftSubtreeEqual = equalsOperatorHelper(lNodePtr->left, lNILL, rNodePtr->left, rNILL);
-        if(!leftSubTreeEqual) {
+        bool leftSubtreeEqual = equalsOperatorHelper(lNodePtr->left, lNIL, rNodePtr->left, rNIL);
+        if(!leftSubtreeEqual) {
             return false;
         }
 
@@ -256,7 +271,7 @@
         }
 
         //Check the right subtrees for equality
-        bool rightSubtreeEqual = equalsOperatorHelper(lNodePtr->right, lNILL, rNodePtr->right, rNILL);
+        bool rightSubtreeEqual = equalsOperatorHelper(lNodePtr->right, lNIL, rNodePtr->right, rNIL);
         return rightSubtreeEqual;  
     }
 
@@ -273,7 +288,7 @@
         T *leftArray = this.getInOrder();
         T *rightArray = rightSide.getInOrder();
         int leftIterator = 0;
-        for(int i = 0; i < rightSize, i++) {
+        for(int i = 0; i < rightSize; i++) {
             if(leftArray[leftIterator] == rightArray[i]) {
                 leftIterator++;
             }
@@ -301,7 +316,7 @@
         T *leftArray = this.getInOrder();
         T *rightArray = rightSide.getInOrder();
         int rightIterator = 0;
-        for(int i = 0; i < leftSize, i++) {
+        for(int i = 0; i < leftSize; i++) {
             if(leftArray[i] == rightArray[rightIterator]) {
                 rightIterator++;
             }
@@ -325,7 +340,7 @@
         T *leftArray = this.getInOrder();
         T *rightArray = rightSide.getInOrder();
         int leftIterator = 0;
-        for(int i = 0; i < rightSize, i++) {
+        for(int i = 0; i < rightSize; i++) {
             if(leftArray[leftIterator] == rightArray[i]) {
                 leftIterator++;
             }
@@ -349,7 +364,7 @@
         T *leftArray = this.getInOrder();
         T *rightArray = rightSide.getInOrder();
         int rightIterator = 0;
-        for(int i = 0; i < leftSize, i++) {
+        for(int i = 0; i < leftSize; i++) {
             if(leftArray[i] == rightArray[rightIterator]) {
                 rightIterator++;
             }
@@ -368,10 +383,10 @@
     Method: Will make a new set equal to leftSide, then insert all elements from the rightSide by converting it
     to an array. This will still maintain the set property since duplicates cannot be inserted */
     template <class T>
-    Set<T> Set<T>::operator+(const Set<T> rightSide) {
+    Set<T> &Set<T>::operator+(const Set<T> rightSide) {
         Set<T> newSet = this;
         T *rightArray = rightSide.getInOrder();
-        rightSize = rightSide.size;
+        int rightSize = rightSide.size;
         for(int i = 0; i < rightSize; i++) {
             newSet.insert(rightArray[i]);
         }
@@ -383,16 +398,16 @@
     Method: Will store the two sets as arrays, and then combine their intersections into a vector. Will then insert
     each element of that vector onto a new set */
     template <class T>
-    Set<T> Set<T>::operator*(const Set<T> rightSide) {
+    Set<T> &Set<T>::operator*(const Set<T> rightSide) {
         T *rightArray = rightSide.getInOrder();
-        T *leftSide = this.getInOrder();
+        T *leftArray = this.getInOrder();
         int rightSize = rightSide.size;
         int leftSize = this.size;
         vector<T> newVector;
         Set<T> newSet;
         int i = 0; //Getting iterator for while loop
         for(int i = 0; i < leftSize; i++) {
-            if(findInArray(leftArray[i], rightSide, rightSize)) {
+            if(findInArray(leftArray[i], rightArray, rightSize)) {
                 newVector.pushBack(leftArray[i]);
             }
         }
@@ -414,16 +429,16 @@
     Method: Store the set as two arrays, then push elements into a vector if they are in
     the leftArray but not in the rightArray */
     template <class T>
-    Set<T> Set<T>::operator-(const Set<T> leftSide) {
+    Set<T>& Set<T>::operator-(const Set<T> leftSide) {
         T *rightArray = this.getInOrder();
-        T *leftSide = leftSide.getInOrder();
+        T *leftArray = leftSide.getInOrder();
         int rightSize = this.size;
         int leftSize = leftSide.size;
         vector<T> newVector;
         Set<T> newSet;
         int i = 0; //Getting iterator for while loop
         for(int i = 0; i < rightSize; i++) {
-            if(!(findInArray(left[i], rightSide, rightSize))) {
+            if(!(findInArray(left[i], rightArray, rightSize))) {
                 newVector.pushBack(rightArray[i]);
             }
         }
@@ -431,24 +446,25 @@
 
     /* Operator << overload - prints out the set on a single line */
     template <class T> 
-    std::ostream& operator<<(std::ostream& os, const Set<T> set) {
-        std:: cout << "{"
+    ostream& operator<<(ostream& os, const Set<T> set) {
+         cout << "{";
         RBTreeNode<T> *nodePtr = set.root;
         int size = set.size;
         bool printComma = true;
         int count = 0;
         set.displayInOrder(nodePtr, os, count, size);
-        std::cout << "}" << std::endl;
+        cout << "}" << endl;
+        return os;
     }
 
     /* displayInOrder helper - prints out the set */
     template<class T> 
-    void Set<T>::displayInOrder(RBTreeNode *nodePtr, ostream &cout, int &count, int size) const {
+    void Set<T>::displayInOrder(RBTreeNode<T> *nodePtr, ostream &sysout, int &count, int size) {
 	if (nodePtr) {
 		displayInOrder(nodePtr->left);
-        cout << nodePtr->value;
+        sysout << nodePtr->value;
         if(count != size-1) {
-            cout << ", ";
+            sysout << ", ";
             count++;
         }
 		displayInOrder(nodePtr->right);

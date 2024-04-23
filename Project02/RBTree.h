@@ -5,6 +5,8 @@
 #ifndef RBTREE_H_
 #define RBTREE_H_
 
+#include <iostream>
+#include <string>
 using namespace std;
 
 enum color_t {
