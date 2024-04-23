@@ -185,11 +185,11 @@ using namespace std; //Simplifying
     Method: Overrides the Red-Black Tree's insert method to ensure no duplicate elements*/
     template <class T>
     void Set<T>::insert(T elementToInsert) {
-        RBTreeNode<T> *newNode = new RBTreeNode<T>(elementToInsert, this->RED, this->NIL, this->NIL, this->NIL);
+        RBTreeNode<T> *newNode = new RBTreeNode<T>(elementToInsert, this->getRed(), this->NIL, this->NIL, this->NIL);
         RBTreeNode<T> *y = this->NIL;
         RBTreeNode<T> *x = this->root;
 
-        while (x != this.NIL) {
+        while (x != this->NIL) {
             y = x;
             if (elementToInsert < x->value){
                 x = x->left;
@@ -214,7 +214,7 @@ using namespace std; //Simplifying
             y->right = newNode;
         }
 
-        this.size++;
+        this->size++;
         //  Adjust the RB tree to retain the properties.
         RBTree<T>::insertFix(newNode);
     }

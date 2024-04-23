@@ -9,14 +9,15 @@
 #include <string>
 using namespace std;
 
-enum color_t {
-	RED, BLACK
-// Red = 0, Black = 1
-};
+enum color_t { //Enumerator here so it can be accessed by other classes
+		RED, BLACK
+		// Red = 0, Black = 1
+	};
 
 template<class T>
 class RBTreeNode {
 public:
+
 	T value;
 	color_t color;
 	RBTreeNode *left;
@@ -59,6 +60,8 @@ protected:
 	void destroySubTree(RBTreeNode<T> *);
 
 	RBTreeNode<T> *copy(RBTreeNode<T> *, RBTreeNode<T> *); //Helper function for copy constructor
+
+	color_t getRed() { return RED; } //Helper function that returns enumerated type RED
 
 public:
 	RBTree();
