@@ -3,7 +3,7 @@
 #include "Multiset.h"
 using namespace std;
 
-/* ----------------------------- Main File - Multiset Demo ----------------------------- 
+/* ----------------------------- Main File - Multiset Demo ------------------------ 
    Author: JJ McCauley
    Creation Date: 4/18/24
    Last Update: 4/23/24
@@ -48,42 +48,42 @@ int main() {
    //Making a new multiSet
    Multiset<int> multiSet2 = multiSet;
    cout << "New multiSet using assignment: " << multiSet2 << endl;
-   Multiset<int> multiSet3 = new Multiset<int>(set2);
+   Multiset<int> multiSet3 = new Multiset<int>(multiSet2);
    cout << "New multiSet using copy constructor: " << multiSet3 << endl;
 
    //Logical operators
-   if(set == multiSet2) {
+   if(multiSet == multiSet2) {
       cout << "The multiSets are equal" << endl;
    }
    multiSet2.erase(2);
-   if(set != multiSet2) {
+   if(multiSet != multiSet2) {
       cout << "Erased 2, multiSets are now not equal" << endl;
    }
-   if(set > multiSet2) {
+   if(multiSet > multiSet2) {
       cout << "___ is a strict subset of ___" << endl;
    }
-   if(set < multiSet2) {
+   if(multiSet < multiSet2) {
       cout << "___ is a strict subset of ___" << endl;
    }
-   if(set > multiSet2) {
+   if(multiSet > multiSet2) {
       cout << "___ is a strict subset of ___" << endl;
    }
-   if(set < multiSet2) {
+   if(multiSet < multiSet2) {
       cout << "___ is a strict subset of ___" << endl;
    }
-   if(set >= multiSet2) {
+   if(multiSet >= multiSet2) {
       cout << "___ is a subset of ___" << endl;
    }
-   if(set <= multiSet2) {
+   if(multiSet <= multiSet2) {
       cout << "___ is a subset of ___" << endl;
    }
    
    //+, *, - operators
-   Multiset<int> multiSetIntersection = multiSet * set2;
+   Multiset<int> multiSetIntersection = multiSet * multiSet2;
    cout << "Intersection of the two multiSets: " << multiSetIntersection << endl;
-   Multiset<int> multiSetUnion = multiSet + set2;
+   Multiset<int> multiSetUnion = multiSet + multiSet2;
    cout << "Union of the two multiSets: " << multiSetUnion << endl;
-   Multiset<int> multiSetDifference = multiSet - set2;
+   Multiset<int> multiSetDifference = multiSet - multiSet2;
    cout << "Difference of the two multiSets: " << multiSetDifference << endl; 
 
    //Clear function

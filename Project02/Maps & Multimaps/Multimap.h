@@ -8,6 +8,7 @@
    Author: JJ McCauley
    Creation Date: 4/18/24
    Last Update: 4/18/24
+   Notes: Inherits the Red-Black tree properties
    ---------------------------------------------------------------------------- */
 
 template <class T>

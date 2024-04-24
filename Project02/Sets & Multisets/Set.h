@@ -31,15 +31,16 @@ using namespace std; //Simplifying
         //Constructs and deconstructors
         Set();
         ~Set();
-        Set(const Set &);
+        Set(const Set<T> &);
+        Set(Set<T> *);
 
         //Set-specific functions
         void clear(); //Clears the set
         int getSize(); //Gets the size of the set
         bool find(T); //Searches the set for a given element
         bool isEmpty(); //Determines if the set is empty
-        vector<T> toVector();
-        T* toArray();
+        void toVector(vector<T> &);
+        void toArray(T* &);
         void erase(T);
         void insert(T) override;
 
@@ -54,7 +55,7 @@ using namespace std; //Simplifying
         Set<T>& operator+(const Set<T>); //Set union
         Set<T>& operator*(const Set<T>); //Set intersection
         Set<T>& operator-(const Set<T>); //Set difference
-        template <class U> friend ostream& operator<<(ostream&, const Set<T>&);
+        template <class U> friend ostream& operator<<(ostream&, const Set<U>);
 
    };
 
@@ -71,6 +72,12 @@ using namespace std; //Simplifying
     Notes: Will automatically call the RBTree copy constructor that I added */
     template <class T>
     Set<T>::Set(const Set<T> &copy) : RBTree<T>(copy) { this->size = copy->size; }
+
+    /*Copy Constructor - Copies a given Set
+    Parameters: A pointer to the set to be copied 
+    Notes: Will automatically call the RBTree copy constructor */
+    template <class T>
+    Set<T>::Set(Set<T> *copy) : RBTree<T>(copy) { this->size = copy->size; }
 
     /*Overloaded Assignment Operator
     Paramters: The set to be assigned 
@@ -139,14 +146,13 @@ using namespace std; //Simplifying
         return(this->root  == this->NIL); //Returns if the root is found
     }
 
-    /* toVector function - converts a set to a vector 
-    Returns: The set as a vector
-    Method: Call the getInOrder function, then convert to a vector */
+    /* toVector function - puts a set into a vector
+    Parameters: The vector to be set as the set
+    Method: Call the getInOrder function on the vector */
     template <class T>
-    vector<T> Set<T>::toVector() {
-        vector<T> vectorToReturn;
-        getInOrderVector(this->root, this->NIL, vectorToReturn);
-        return vectorToReturn;
+    void Set<T>::toVector(vector<T> &v) {
+        v.clear(); //clearing the vector of all contents
+        getInOrderVector(this->root, this->NIL, v);
     }
 
     template <class T>
@@ -162,8 +168,8 @@ using namespace std; //Simplifying
     Returns: The set as an array
     Method: Call the getInOrder function */
     template <class T>
-    T* Set<T>::toArray() {
-        return getInOrder();
+    void Set<T>::toArray(T *&a) {
+        a = getInOrder();
     }
 
     /* erase function - deletes an element from the set 
@@ -447,7 +453,7 @@ using namespace std; //Simplifying
 
     /* Operator << overload - prints out the set on a single line */
     template <class T> 
-    ostream& Set<T>::operator<<(ostream& os, const Set<T> set) {
+    ostream& operator<<(ostream& os, const Set<T> set) {
          cout << "{";
         RBTreeNode<T> *nodePtr = set->root;
         int size = set->size;

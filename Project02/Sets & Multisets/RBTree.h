@@ -82,7 +82,7 @@ public:
 template <class T>
 RBTree<T>::RBTree(const RBTree<T> &copy) {
 	RBTreeNode<T> *nodePtr = copy.root;
-   RBTreeNode<T> *NILPtr = copy.NIL;
+    RBTreeNode<T> *NILPtr = copy.NIL;
 	root = copy(nodePtr, NILPtr); //Invokes helper function
 }
 
