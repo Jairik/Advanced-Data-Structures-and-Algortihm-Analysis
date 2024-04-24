@@ -250,7 +250,7 @@ RBTreeNode<T>* RBTree<T>::getMinNode(RBTreeNode<T> *x) {
  */
 template<class T>
 void RBTree<T>::remove(T val) {
-	RBTreeNode<T> *z = findNode(val);
+	RBTreeNode<T> *z = this->findNode(val);
 	if (z == NIL)
 		return;
 

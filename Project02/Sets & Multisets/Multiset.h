@@ -17,22 +17,18 @@
     //Helper functions
     private:
         int size; //Increments or decrements based on insertions
-        T* getInOrder(); //Returns array of inordered elements 
+        T* getInOrder() const; //Returns array of inordered elements 
         void getInOrderHelper(RBTreeNode<T> *, RBTreeNode<T> *, T *&, int); 
         bool equalsOperatorHelper(RBTreeNode<T> *, RBTreeNode<T> *, RBTreeNode<T> *, RBTreeNode<T> *);
         void getInOrderVector(RBTreeNode<T> *, RBTreeNode<T> *, vector<T> &);
         bool findInArray(T, T *, int);
         int countHelper(RBTreeNode<T> *, T, int &);
-
-    protected:
-        RBTreeNode<T> *getRoot(); //Helper function
     
     public:
         //Constructs and deconstructors
         Multiset();
         ~Multiset();
         Multiset(const Multiset &);
-        template <class U> Multiset(Multiset<U> *);
 
         //Multiset-specific functions
         void clear(); //Clears the multiset
@@ -59,6 +55,7 @@
         Multiset<T>& operator-(const Multiset<T>); //Multiset difference
         template <class U> friend ostream& operator<<(ostream&, const Multiset<T>&);
         void displayInOrder(RBTreeNode<T> *, ostream &, int &, int) const; //Must be public for << operator
+        RBTreeNode<T> *getRoot(); //Helper function that must be public
 
    };
 
@@ -75,14 +72,6 @@
     Notes: Will automatically call the RBTree copy constructor that I added */
     template <class T>
     Multiset<T>::Multiset(const Multiset<T> &copy) : RBTree<T>(copy) { this->size = copy.size; }
-
-    /*Copy Constructor - Copies a given Multiset
-    Parameters: A pointer to the Multiset to be copied 
-    Notes: Will automatically call the RBTree copy constructor */
-    template <class T>
-    Multiset<T>::Multiset(Multiset<T>* copy) : RBTree<T>(static_cast<RBTree<T>*>(copy)) { 
-        this.size = copy.size; 
-    }
 
     /* Count - returns the count of a given element 
     Paramters: The element to check for
@@ -134,7 +123,7 @@
     Parameters: N/A
     Returns: An array of in-order elements */
     template <class T>
-    T* Multiset<T>::getInOrder() {
+    T* Multiset<T>::getInOrder() const {
         int numElements = getSize(); //Get the number of elements to allocate array
         T *elementArray = new T[numElements]; //Allocating space for elements
         getInOrderHelper(this->root, this->NIL, elementArray, 0); //Get the in-order array
@@ -149,9 +138,9 @@
     template <class T>
     void Multiset<T>::getInOrderHelper(RBTreeNode<T> *nodePtr, RBTreeNode<T> *nilPtr, T *&elementArray, int iterator) {
         if (nodePtr != nilPtr) {
-		    getInOrderHelper(nodePtr->left);
+		    getInOrderHelper(nodePtr->left, nilPtr, elementArray, iterator);
 		    elementArray[iterator++] = nodePtr->value;
-		    getInOrderHelper(nodePtr->right);
+		    getInOrderHelper(nodePtr->right, nilPtr, elementArray, iterator);
 	    } 
     }
 
@@ -226,7 +215,7 @@
 
     template <class T>
     bool Multiset<T>::operator==(const Multiset<T> rightSide) {
-        if(this->size != rightSide->size) { //If the sizes are not equal, we can skip the rest
+        if(this->size != rightSide.size) { //If the sizes are not equal, we can skip the rest
             return false;
         }
         RBTreeNode<T> *leftNodePtr = this->root;
@@ -286,11 +275,11 @@
     bool Multiset<T>::operator<(const Multiset<T> rightSide) {
         //If leftSide size is equal or greater, then it cannot be a strict subset and we can skip remaining steps
         int leftSize = this->size;
-        int rightSize = rightSide->size;
+        int rightSize = rightSide.size;
         if (leftSize >= rightSize) {
             return false;
         }
-        T *leftArray = this.getInOrder();
+        T *leftArray = this->getInOrder();
         T *rightArray = rightSide.getInOrder();
         int leftIterator = 0;
         for(int i = 0; i < rightSize; i++) {
@@ -314,11 +303,11 @@
     bool Multiset<T>::operator>(const Multiset<T> rightSide) {
         //If rightSide size is equal or greater, then it cannot be a strict subset and we can skip remaining steps
         int leftSize = this->size;
-        int rightSize = rightSide->size;
+        int rightSize = rightSide.size;
         if (leftSize <= rightSize) {
             return false;
         }
-        T *leftArray = this.getInOrder();
+        T *leftArray = this->getInOrder();
         T *rightArray = rightSide.getInOrder();
         int rightIterator = 0;
         for(int i = 0; i < leftSize; i++) {
@@ -341,8 +330,8 @@
     template <class T>
     bool Multiset<T>::operator<=(const Multiset<T> rightSide) {
         int leftSize = this->size;
-        int rightSize = rightSide->size;
-        T *leftArray = this.getInOrder();
+        int rightSize = rightSide.size;
+        T *leftArray = this->getInOrder();
         T *rightArray = rightSide.getInOrder();
         int leftIterator = 0;
         for(int i = 0; i < rightSize; i++) {
@@ -365,8 +354,8 @@
     template <class T>
     bool Multiset<T>::operator>=(const Multiset<T> rightSide) {
         int leftSize = this->size;
-        int rightSize = rightSide->size;
-        T *leftArray = this.getInOrder();
+        int rightSize = rightSide.size;
+        T *leftArray = this->getInOrder();
         T *rightArray = rightSide.getInOrder();
         int rightIterator = 0;
         for(int i = 0; i < leftSize; i++) {
@@ -390,10 +379,10 @@
     seen, ensuring only the highest freuency of each element gets added */
     template <class T>
     Multiset<T>& Multiset<T>::operator+(const Multiset<T>& rightSide) {
-        T *leftArray = this.getInOrder();
+        T *leftArray = this->getInOrder();
         int leftSize = this->size;
         T *rightArray = rightSide.getInOrder();
-        int rightSize = rightSide->size;
+        int rightSize = rightSide.size;
         Multiset<T> newMultiset;
         int l, r = 0; //Iterators for left and right side
         
@@ -403,21 +392,21 @@
             element is greater than the rightArray, add the rightArray's element*/
             if(leftArray[l] > rightArray[r] || l >= leftSize) {
                 newMultiset.insert(rightArray[r]);
-                newMultiset->count++;
+                newMultiset.size++;
                 r++;
             }
             /* If all elements of the right array have been added or the rightArray's 
             element is greater than the leftArray, add the leftArray's element*/
             else if(leftArray[l] < rightArray[r] || r >= rightSize) {
                 newMultiset.insert(leftArray[r]);
-                newMultiset->count++;
+                newMultiset.size++;
                 l++;
             }
             /* If is neither of these conditions, then the elements must be equal, 
             in which case we add the element then increment both iterators */
             else { 
                 newMultiset.insert(rightArray[r]);
-                newMultiset->count++;
+                newMultiset.size++;
                 l++;
                 r++;
             }
@@ -434,7 +423,7 @@
     Multiset<T> &Multiset<T>::operator*(const Multiset<T> rightSide) {
         T *rightArray = rightSide.getInOrder();
         T *leftArray = this.getInOrder();
-        int rightSize = rightSide->size;
+        int rightSize = rightSide.size;
         int leftSize = this->size;
         Multiset<T> newMultiSet;
         int l = 0, r = 0; //Getting iterator for while loop
@@ -453,7 +442,7 @@
             }
             else { 
                 newMultiSet.insert(rightArray[r]);
-                newMultiSet->size++;
+                newMultiSet.size++;
                 l++;
                 r++;
             }
@@ -487,9 +476,9 @@
         Multiset<T> newMultiset;
 
         for(int i = 0; i < rightSize; i++) {
-            if(!(findInArray(leftArray[i], rightArray, rightSize)) {
+            if(!(findInArray(leftArray[i], rightArray, rightSize))) {
                 newMultiset.insert(leftArray[i]);
-                newMultiset->size++;
+                newMultiset.size++;
             }
         }
         return newMultiset;

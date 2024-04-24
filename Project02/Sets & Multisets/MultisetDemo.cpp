@@ -48,8 +48,6 @@ int main() {
    //Making a new multiSet
    Multiset<int> multiSet2 = multiSet;
    cout << "New multiSet using assignment: " << multiSet2 << endl;
-   Multiset<int> multiSet3 = new Multiset<int>(multiSet2);
-   cout << "New multiSet using copy constructor: " << multiSet3 << endl;
 
    //Logical operators
    if(multiSet == multiSet2) {
