@@ -119,7 +119,7 @@ RBTree<T, V>::RBTree(RBTree<T, V> &copy) {
 
 template <class T, class V>
 RBTree<T, V>::RBTree() {
-	NIL = new RBTreeNode<T, V>(NULL, NULL, BLACK, nullptr, nullptr, nullptr);
+	NIL = new RBTreeNode<T, V>(T(), V(), BLACK, nullptr, nullptr, nullptr);
 	root = NIL;
 }
 
@@ -256,8 +256,8 @@ RBTreeNode<T, V>* RBTree<T, V>::getMinNode(RBTreeNode<T, V> *x) {
  * to readjust the tree back to RB format.
  */
 template <class T, class V>
-void RBTree<T, V>::remove(T val) {
-	RBTreeNode<T, V> *z = findNodeHelper(val);
+void RBTree<T, V>::remove(T key) {
+	RBTreeNode<T, V> *z = findNodeHelper(key);
 	if (z == NIL)
 		return;
 
@@ -436,7 +436,7 @@ RBTreeNode<T, V>* RBTree<T, V>::findNodeHelper(const T &item) {
 		else if (item < nodePtr->key)
 			nodePtr = nodePtr->left;
 		else
-			nodePtr = nodePtr->key;
+			nodePtr = nodePtr->right;
 	}
 	return NIL;
 }

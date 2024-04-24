@@ -3,6 +3,7 @@
 
 #include "RBTree.h"
 #include <vector>
+#include <string> //for testing
 #include <stdexcept> //Allows us to throw errors
 
 /* ---------------------------- Map Header File ------------------------------- 
@@ -85,7 +86,7 @@ class Map : public RBTree<T, V> {
     /* isEmpty - will return whether the map is empty */
     template <class T, class V>
     bool Map<T, V>::isEmpty() {
-        return(this->root == this->NILL);
+        return(this->root == this->NIL);
     }
 
     /* find - will return whether a given key is in the map */
@@ -153,7 +154,7 @@ class Map : public RBTree<T, V> {
     template <class T, class V>
     Map<T, V> Map<T,V>::operator=(Map<T,V> &rightMap) {
         clear();
-        copyMap(rightMap->root, rightMap->NIL);
+        copyMap(rightMap.root, rightMap.NIL);
         return *this;
     }
 
