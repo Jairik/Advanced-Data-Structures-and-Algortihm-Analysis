@@ -21,11 +21,12 @@ class Map : public RBTree<T, V> {
         void calculateSize(RBTreeNode<T, V> *, int &);
         void copyMap(RBTreeNode<T,V> *, RBTreeNode<T,V> *);
         bool equalsOperatorHelper(RBTreeNode<T,V> *, RBTreeNode<T,V> *,RBTreeNode<T,V> *, RBTreeNode<T,V> *, bool &);
+        void inOrderDisplay(RBTreeNode<T,V> *, RBTreeNode<T,V> *, ostream &, int &);
+
     public:
         //Constructors 
         Map();
         ~Map();
-        Map(Map<T,V> &); 
 
         //Map-specific functions
         void insert(T, V);
@@ -46,26 +47,20 @@ class Map : public RBTree<T, V> {
 
     //Default constructor
     template <class T, class V>
-    Map<T, V>::Map() {}
+    Map<T,V>::Map() {}
 
     //deconstructor
     template <class T, class V>
-    Map<T, V>::~Map() {}
-
-    /* Copy constructor - copies a given map */
-    template <class T, class V>
-    Map<T, V>::Map(Map<T,V> &copy) {
-        //Will implement logic later
-    }
+    Map<T,V>::~Map() {}
 
     /* Overriden insert function - replaces value at duplicate key */
     template <class T, class V>
     void Map<T, V>::insert(T newKey, V val) {
-        RBTreeNode<T, V> *newnode = new RBTreeNode<T, V>(newKey, val, RED, NIL, NIL, NIL);
-        RBTreeNode<T, V> *y = NIL;
-        RBTreeNode<T, V> *x = root;
+        RBTreeNode<T, V> *newnode = new RBTreeNode<T, V>(newKey, val, RED, this->NIL, this->NIL, this->NIL);
+        RBTreeNode<T, V> *y = this->NIL;
+        RBTreeNode<T, V> *x = this->root;
 
-        while (x != NIL) {
+        while (x != this->NIL) {
             y = x;
             if (newKey < x->key)
                 x = x->left;
@@ -76,15 +71,15 @@ class Map : public RBTree<T, V> {
                 return;
         }
         newnode->parent = y;
-        if (y == NIL)
-            root = newnode;
+        if (y == this->NIL)
+            this->root = newnode;
         else if (newnode->value < y->value)
             y->left = newnode;
         else
             y->right = newnode;
 
         // Adjust the RB tree to retain the properties.
-        insertFix(newnode);
+        this->insertFix(newnode);
     }
 
     /* isEmpty - will return whether the map is empty */
@@ -96,7 +91,7 @@ class Map : public RBTree<T, V> {
     /* find - will return whether a given key is in the map */
     template <class T, class V>
     bool Map<T, V>::find(T key) {
-        findNode(key); //Call the RBTree method to find the given key
+        return findNode(key); //Call the RBTree method to find the given key
     }
 
     /* erase - will remove a given key off the map*/
@@ -131,12 +126,12 @@ class Map : public RBTree<T, V> {
     V Map<T,V>::get(T findKey) {
         RBTreeNode<T,V> *nodePtr = this->root;
         while (nodePtr != this->NIL) {
-            if (findKey < x->key)
-                x = x->left;
-            else if(findKey > x->key)
-                x = x->right;
+            if (findKey < nodePtr->key)
+                nodePtr = nodePtr->left;
+            else if(findKey > nodePtr->key)
+                nodePtr = nodePtr->right;
             else //keys must be equal
-                return x->value;
+                return nodePtr->value;
         }
         //If key was not found, exception is thrown
         throw out_of_range("Key was not found in the map");
@@ -199,13 +194,37 @@ class Map : public RBTree<T, V> {
         if(rNodePtr != rNILPtr) {
             equalsOperatorHelper(lNodePtr->left, lNILPtr, rNodePtr->left, rNILPtr, areEqual);
             if(lNodePtr->key != rNodePtr->right || lNodePtr->value != rNodePtr->value) {
-                areEqual = fasle;
-                return; //Start exiting out of the function
+                areEqual = false;
+                return areEqual; //Start exiting out of the function
             }
             equalsOperatorHelper(lNodePtr->right, lNILPtr, rNodePtr->right, rNILPtr, areEqual);
         }
     }
 
-    
+    /* << operator overload 
+    Method: Call the displayInOrder helper function */
+    template <class T, class V>
+    ostream& operator<<(ostream& os, Map<T,V> &map) {
+        os << "{ ";
+        int count = 0;
+        map.inOrderDisplay(map.root, map.NIL, os, count);
+        os << " }" << endl;
+        return os;
+    }
+
+    /* inOrderDisplay helper function
+    Method: Prints out elements in an in-order fashion */
+    template <class T, class V>
+    void Map<T,V>::inOrderDisplay(RBTreeNode<T,V> *nodePtr, RBTreeNode<T,V> *NILPtr, ostream& sysout, int &count) {
+        if(nodePtr != NILPtr) {
+            inOrderDisplay(nodePtr->left, NILPtr, sysout, count);
+            sysout << "(" << nodePtr->key << ", " << nodePtr->value << ")";
+            if(count <= size()) {
+                sysout << ", ";
+                count++;
+            }
+            inOrderDisplay(nodePtr->right, NILPtr, sysout, count);
+        }
+    }
 
 #endif

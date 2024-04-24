@@ -27,6 +27,8 @@ public:
 	RBTreeNode *parent;
 
 	RBTreeNode() {
+		key = NULL;
+		value = NULL;
 		left = nullptr;
 		right = nullptr;
 		parent = nullptr;
@@ -117,7 +119,7 @@ RBTree<T, V>::RBTree(RBTree<T, V> &copy) {
 
 template <class T, class V>
 RBTree<T, V>::RBTree() {
-	NIL = new RBTreeNode<T, V>(T(), BLACK, nullptr, nullptr, nullptr);
+	NIL = new RBTreeNode<T, V>(NULL, NULL, BLACK, nullptr, nullptr, nullptr);
 	root = NIL;
 }
 
@@ -147,8 +149,8 @@ void RBTree<T, V>::destroySubTree(RBTreeNode<T, V> *nodePtr) {
  * Note: Overriden in both functions
  */
 template <class T, class V>
-void RBTree<T, V>::insert(T val, V key) {
-	RBTreeNode<T, V> *newnode = new RBTreeNode<T, V>(key, val, RED, NIL, NIL, NIL);
+void RBTree<T, V>::insert(T key, V val) {
+	RBTreeNode<T, V> *newnode = new RBTreeNode<T,V>(key, val, RED, NIL, NIL, NIL);
 	RBTreeNode<T, V> *y = NIL;
 	RBTreeNode<T, V> *x = root;
 

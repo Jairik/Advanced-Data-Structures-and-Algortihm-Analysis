@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <string>
 #include "Map.h"
 
 using namespace std;
@@ -13,8 +14,8 @@ using namespace std;
    -------------------------------------------------------------------------------- */
 
     int main() {
-        cout << "-------------Map-------------";
-        Map<int> map; //Making a new map
+        cout << "-------------Map-------------" << endl;
+        Map<int, string> map; //Making a new map
     
 
     }
