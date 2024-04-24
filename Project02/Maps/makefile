@@ -1,13 +1,13 @@
 PROG = prog
 CC = g++
 CPPFLAGS = -g -Wall
-OBJS = TreeTiming.o
+OBJS = MapDemo.o
 
 $(PROG) : $(OBJS)
 	$(CC) -o $(PROG) $(OBJS)
 
-TreeTiming.o : TreeTiming.cpp
-	$(CC) $(CPPFLAGS) -c TreeTiming.cpp
+MapDemo.o : MapDemo.cpp
+	$(CC) $(CPPFLAGS) -c MapDemo.cpp
 
 clean:
 	rm -f core $(PROG) $(OBJS)

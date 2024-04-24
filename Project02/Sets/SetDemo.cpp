@@ -14,7 +14,7 @@ using namespace std;
 
 int main() {
 
-   cout << "-------------Set-------------" << endl;
+   cout << "-------------Set-------------" << endl << endl;
    Set<int> set; //Making the set
     
    //Testing if the set is empty

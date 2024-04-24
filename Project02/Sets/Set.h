@@ -20,11 +20,10 @@ using namespace std; //Simplifying
     private:
         int size; //Increments or decrements based on insertions
         T* getInOrder(); //Returns array of inordered elements 
-        void getInOrderHelper(RBTreeNode<T> *, RBTreeNode<T> *, T *&, int); //Helper function that recursively iterates through the tree in-order
-        void sizeHelper(int &); //Helper function that transverses through the tree and increments size
+        void getInOrderHelper(RBTreeNode<T> *, RBTreeNode<T> *, T *&, int); 
         bool equalsOperatorHelper(RBTreeNode<T> *, RBTreeNode<T> *, RBTreeNode<T> *, RBTreeNode<T> *);
         void getInOrderVector(RBTreeNode<T> *, RBTreeNode<T> *, vector<T> &);
-        void displayInOrder(RBTreeNode<T> *, ostream &, int &, int);
+        void displayInOrder(RBTreeNode<T> *, ostream &, int &) const;
         bool findInArray(T, T *, int);
         void inOrderCopy(RBTreeNode<T> *);
     
@@ -36,7 +35,7 @@ using namespace std; //Simplifying
 
         //Set-specific functions
         void clear(); //Clears the set
-        int getSize(); //Gets the size of the set
+        int getSize() const; //Gets the size of the set
         bool find(T); //Searches the set for a given element
         bool isEmpty(); //Determines if the set is empty
         void toVector(vector<T> &);
@@ -55,7 +54,7 @@ using namespace std; //Simplifying
         Set<T> operator+(Set<T>); //Set union
         Set<T> operator*(Set<T>); //Set intersection
         Set<T> operator-(Set<T>); //Set difference
-        template <class U> friend ostream& operator<<(ostream&, Set<U>);
+        template <class U> friend ostream& operator<<(ostream&, const Set<U> &);
 
    };
 
@@ -78,10 +77,10 @@ using namespace std; //Simplifying
     Method: Clear the current tree, then copy the current one to it*/
     template <class T>
     Set<T>& Set<T>::operator=(Set<T> &rightSet) {
-        if(this == rightSet) {
+        if(this == &rightSet) {
             return *this;
         }
-        this->clear(); //clearing the current tree
+        clear(); //clearing the current tree
         this->root = this->NIL;
         inOrderCopy(rightSet.root);
         this->size = rightSet.size; 
@@ -104,8 +103,7 @@ using namespace std; //Simplifying
     Method: Destroy the current subtree */
     template <class T>
     void Set<T>::clear() {
-        this->destroySubTree(this->root);
-        this->root = this->NIL;
+        RBTree<T>::destroySubTree(this->root);
         size = 0; 
     }
 
@@ -137,7 +135,7 @@ using namespace std; //Simplifying
     /* Size function - returns the size of the tree
     Returns: the size of the set */
     template <class T>
-    int Set<T>::getSize() {
+    int Set<T>::getSize() const{
         return size;
     }
 
@@ -189,9 +187,6 @@ using namespace std; //Simplifying
             this->remove(elementToDelete);
             --size;
         }
-        else { //If it is not in the set
-            cout << "Element is not in the set" << endl;
-        }
     }
 
     /* insert function - inserts an element into the set 
@@ -200,6 +195,7 @@ using namespace std; //Simplifying
     template <class T>
     void Set<T>::insert(T elementToInsert) {
         RBTreeNode<T> *newNode = new RBTreeNode<T>(elementToInsert, this->getRed(), this->NIL, this->NIL, this->NIL);
+        
         RBTreeNode<T> *y = this->NIL;
         RBTreeNode<T> *x = this->root;
 
@@ -212,7 +208,6 @@ using namespace std; //Simplifying
                 x = x->right;
             }
             else { //elementToInsert == x
-                cout << "Set does not allow for duplicate node" << endl;
                 delete newNode;
                 return;
             }
@@ -228,7 +223,7 @@ using namespace std; //Simplifying
             y->right = newNode;
         }
 
-        this->size++;
+        size++; 
         //  Adjust the RB tree to retain the properties.
         RBTree<T>::insertFix(newNode);
     }
@@ -462,30 +457,29 @@ using namespace std; //Simplifying
 
     /* Operator << overload - prints out the set on a single line */
     template <class T> 
-    ostream& operator<<(ostream& os, Set<T> set) {
-         cout << "{";
+    ostream& operator<<(ostream& os, const Set<T> &set) {
+        os << "{";
         RBTreeNode<T> *nodePtr = set.root;
-        int size = set.size;
-        bool printComma = true;
         int count = 0;
-        set.displayInOrder(nodePtr, os, count, size);
-        cout << "}" << endl;
+        set.displayInOrder(nodePtr, os, count);
+        os << "}\n";
         return os;
     }
 
-    /* displayInOrder helper - prints out the set */
+    /* displayInOrder helper - prints out the set 
+    I have absolutely no clue why this is segfaulting */
     template<class T> 
-    void Set<T>::displayInOrder(RBTreeNode<T> *nodePtr, ostream &sysout, int &count, int size) {
-	if (nodePtr) {
-		displayInOrder(nodePtr->left, sysout, count, size);
-        sysout << nodePtr->value;
-        if(count != size-1) {
-            sysout << ", ";
-            count++;
+    void Set<T>::displayInOrder(RBTreeNode<T> *nodePtr, ostream &sysout, int &count) const {
+        if (nodePtr != this->NIL) {
+            displayInOrder(nodePtr->left, sysout, count);
+            sysout << nodePtr->value;
+            if(count != (getSize()-1)) {
+                sysout << ", ";
+                count++;
+            }
+            displayInOrder(nodePtr->right, sysout, count);
         }
-		displayInOrder(nodePtr->right, sysout, count, size);
-	}
-}
+    }
 
 
 #endif 
