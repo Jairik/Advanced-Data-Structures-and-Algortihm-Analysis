@@ -6,9 +6,10 @@
 
 /* -------------------------- Multiset Header File ---------------------------- 
    Author: JJ McCauley
-   Creation Date: 4/18/24
-   Last Update: 4/18/24
-   Notes: Inherits properties from the Red-Black Tree
+   Creation Date: 4/23/24
+   Last Update: 4/23/24
+   Notes: Inherits properties from the Red-Black Tree. This is also very similar
+   to Sets, except for a few behavior changes.
    ---------------------------------------------------------------------------- */
 
    template <class T>
@@ -76,9 +77,7 @@
     Method: Calls the count helper function */
     template <class T>
     int Multiset<T>::count(T element) {
-        int count = 0;
-        count = countHelper(this->root, element, count);
-        return count;
+        return countHelper(this->root, element, 0);
     }
 
     /* countHelper - helper function to Count
@@ -86,7 +85,14 @@
     Method: Recursively transverses to the tree in-order, incrementing and returning count*/
     template <class T>
     int Multiset<T>::countHelper(RBTreeNode<T> *nodePtr, T elementToCheck, int &count) {
-        
+        if(nodePtr != this->NIL) {
+            countHelper(nodePtr->left, elementToCheck, count);
+            if(nodePtr->value == elementToCheck) {
+                count++;
+            }
+            countHelper(nodePtr->right, elementToCheck, count);
+        }
+        return count;
     }
 
     /*Overloaded Assignment Operator
@@ -199,41 +205,11 @@
 
     /* insert function - inserts an element into the set 
     Parameters: The value of the element to insert
-    Method: Overrides the Red-Black Tree's insert method to ensure no duplicate elements*/
+    Method: Inserts an element into the Red-Black tree
+    Notes: An override is not necessary */
     template <class T>
     void Multiset<T>::insert(T elementToInsert) {
-        RBTreeNode<T> *newNode = new RBTreeNode<T>(elementToInsert, this->getRed(), this->NIL, this->NIL, this->NIL);
-        RBTreeNode<T> *y = this->NIL;
-        RBTreeNode<T> *x = this->root;
-
-        while (x != this->NIL) {
-            y = x;
-            if (elementToInsert < x->value){
-                x = x->left;
-            }
-            else if (elementToInsert > x->value) {
-                x = x->right;
-            }
-            else { //elementToInsert == x
-                cout << "Multiset does not allow for duplicate node" << endl;
-                delete newNode;
-                return;
-            }
-        }
-        newNode->parent = y;
-        if (y == this->NIL) {
-            this->root = newNode;
-        }
-        else if (newNode->value < y->value) {
-            y->left = newNode;
-        }
-        else {
-            y->right = newNode;
-        }
-
-        this->size++;
-        //  Adjust the RB tree to retain the properties.
-        RBTree<T>::insertFix(newNode);
+        RBTree<T>::insert(elementToInsert);
     }
 
     template <class T>
@@ -397,17 +373,45 @@
     }
 
     /* Operator + overload - returns the union of two sets 
-    Method: Will make a new set equal to leftSide, then insert all elements from the rightSide by converting it
-    to an array. This will still maintain the set property since duplicates cannot be inserted */
+    Method: Makes a new multiset, converts the multisets to arrays,
+    then will loop through the array and add elements as they are
+    seen, ensuring only the highest freuency of each element gets added */
     template <class T>
-    Multiset<T> &Multiset<T>::operator+(const Multiset<T> rightSide) {
-        Multiset<T> newMultiset = this;
+    Multiset<T>& Multiset<T>::operator+(const Multiset<T>& rightSide) {
+        T *leftArray = this.getInOrder();
+        int leftSize = this->size;
         T *rightArray = rightSide.getInOrder();
-        int rightSize = rightSide.size;
-        for(int i = 0; i < rightSize; i++) {
-            newMultiset.insert(rightArray[i]);
+        int rightSize = rightSide->size;
+        Multiset<T> newMultiset;
+        int l, r = 0; //Iterators for left and right side
+        
+        //Loops through the arrays until all elements have been added
+        while(l <= leftSize && r <= rightSize) {
+            /* If all elements of the left array have been added or the leftArray's 
+            element is greater than the rightArray, add the rightArray's element*/
+            if(leftArray[l] > rightArray[r] || l >= leftSize) {
+                newMultiset.insert(rightArray[r]);
+                newMultiSet->count++;
+                r++;
+            }
+            /* If all elements of the right array have been added or the rightArray's 
+            element is greater than the leftArray, add the leftArray's element*/
+            else if(leftArray[l] < rightArray[r] || r >= rightSize) {
+                newMultiset.insert(leftArray[r]);
+                newMultiSet->count++;
+                l++;
+            }
+            /* If is neither of these conditions, then the elements must be equal, 
+            in which case we add the element then increment both iterators */
+            else { 
+                newMultiSet.insert(rightArray[r]);
+                newMultiSet->count++;
+                l++;
+                r++;
+            }
         }
         delete rightArray; //Freeing up memory
+        delete leftArray;
         return newMultiset;
     }
 
@@ -420,14 +424,31 @@
         T *leftArray = this.getInOrder();
         int rightSize = rightSide.size;
         int leftSize = this.size;
-        vector<T> newVector;
         Multiset<T> newMultiset;
         int i = 0; //Getting iterator for while loop
+
+        //Iterate through this multiset's elements
         for(int i = 0; i < leftSize; i++) {
-            if(findInArray(leftArray[i], rightArray, rightSize)) {
-                newVector.pushBack(leftArray[i]);
+            T element = rightArray[i]
+        }
+        //Loops through the arrays until all elements have been added
+        while(l <= leftSize && r <= rightSize) {
+            if(leftArray[l] > rightArray[r]) {
+                r++;
+            }
+            else if(leftArray[l] < rightArray[r]) {
+                l++;
+            }
+            else { 
+                newMultiSet.insert(rightArray[r]);
+                newMultiSet->count++;
+                l++;
+                r++;
             }
         }
+        delete rightArray; //Freeing up memory
+        delete leftArray;
+        return newMultiset;
     }
 
     /* FindInArray helper function - returns whether a given element in an array, if it exists
@@ -443,22 +464,24 @@
     }
 
     /* Operator - overload - returns the set difference 
-    Method: Store the set as two arrays, then push elements into a vector if they are in
-    the leftArray but not in the rightArray */
+    Method: Store the set as two arrays, then will insert elements into a 
+    new set as they are seen in leftArray and not found in rightArray */
     template <class T>
-    Multiset<T>& Multiset<T>::operator-(const Multiset<T> leftSide) {
-        T *rightArray = this.getInOrder();
-        T *leftArray = leftSide.getInOrder();
-        int rightSize = this.size;
-        int leftSize = leftSide.size;
-        vector<T> newVector;
+    Multiset<T>& Multiset<T>::operator-(const Multiset<T> rightSide) {
+        T *rightArray = rightSide.getInOrder(); //Store right side as array
+        int rightSize = rightSide->size;
+        T *leftArray = this.getInOrder();
+        int leftSize = this->size;
+        this.toVector(leftVector);  
         Multiset<T> newMultiset;
-        int i = 0; //Getting iterator for while loop
+
         for(int i = 0; i < rightSize; i++) {
-            if(!(findInArray(left[i], rightArray, rightSize))) {
-                newVector.pushBack(rightArray[i]);
+            if(!(findInArray(leftArray[i]), rightArray, rightSize)) {
+                newMultiset.insert(leftArray[i]);
+                newMultiset->size++;
             }
         }
+        return newMultiset;
     }
 
     /* Operator << overload - prints out the set on a single line */

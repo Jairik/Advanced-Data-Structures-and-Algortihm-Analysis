@@ -9,7 +9,7 @@ using namespace std; //Simplifying
 /* ---------------------------- Set Header File ---------------------------- 
    Author: JJ McCauley
    Creation Date: 4/18/24
-   Last Update: 4/18/24
+   Last Update: 4/23/24
    Notes: Inherits properties from the Red-Black Tree
    ---------------------------------------------------------------------------- */
 
@@ -70,7 +70,7 @@ using namespace std; //Simplifying
     Parameters: The set to be copied 
     Notes: Will automatically call the RBTree copy constructor that I added */
     template <class T>
-    Set<T>::Set(const Set<T> &copy) : RBTree<T>(copy) { this.size = copy.size; }
+    Set<T>::Set(const Set<T> &copy) : RBTree<T>(copy) { this->size = copy->size; }
 
     /*Overloaded Assignment Operator
     Paramters: The set to be assigned 
@@ -389,6 +389,7 @@ using namespace std; //Simplifying
         int rightSize = rightSide.size;
         for(int i = 0; i < rightSize; i++) {
             newSet.insert(rightArray[i]);
+            newSet->count++;
         }
         delete rightArray; //Freeing up memory
         return newSet;
@@ -403,12 +404,12 @@ using namespace std; //Simplifying
         T *leftArray = this.getInOrder();
         int rightSize = rightSide.size;
         int leftSize = this.size;
-        vector<T> newVector;
         Set<T> newSet;
         int i = 0; //Getting iterator for while loop
         for(int i = 0; i < leftSize; i++) {
             if(findInArray(leftArray[i], rightArray, rightSize)) {
-                newVector.pushBack(leftArray[i]);
+                newSet.insert(leftArray[i]);
+                newSet->count++;
             }
         }
     }
@@ -426,30 +427,30 @@ using namespace std; //Simplifying
     }
 
     /* Operator - overload - returns the set difference 
-    Method: Store the set as two arrays, then push elements into a vector if they are in
-    the leftArray but not in the rightArray */
+    Method: Store the set as two arrays, then will insert elements into a 
+    new set as they are seen in leftArray and not found in rightArray */
     template <class T>
-    Set<T>& Set<T>::operator-(const Set<T> leftSide) {
-        T *rightArray = this.getInOrder();
-        T *leftArray = leftSide.getInOrder();
-        int rightSize = this.size;
-        int leftSize = leftSide.size;
-        vector<T> newVector;
+    Set<T>& Set<T>::operator-(const Set<T> rightSide) {
+        T *rightArray = rightSide.getInOrder();
+        T *leftArray = this.getInOrder();
+        int rightSize = leftSide->size;
+        int leftSize = rightSide->size;
         Set<T> newSet;
         int i = 0; //Getting iterator for while loop
         for(int i = 0; i < rightSize; i++) {
             if(!(findInArray(left[i], rightArray, rightSize))) {
-                newVector.pushBack(rightArray[i]);
+                newSet.insert(left[i]);
             }
         }
+        return newSet;
     }
 
     /* Operator << overload - prints out the set on a single line */
     template <class T> 
-    ostream& operator<<(ostream& os, const Set<T> set) {
+    ostream& Set<T>::operator<<(ostream& os, const Set<T> set) {
          cout << "{";
-        RBTreeNode<T> *nodePtr = set.root;
-        int size = set.size;
+        RBTreeNode<T> *nodePtr = set->root;
+        int size = set->size;
         bool printComma = true;
         int count = 0;
         set.displayInOrder(nodePtr, os, count, size);
