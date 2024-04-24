@@ -21,6 +21,7 @@
         void getInOrderHelper(RBTreeNode<T> *, RBTreeNode<T> *, T *&, int); 
         bool equalsOperatorHelper(RBTreeNode<T> *, RBTreeNode<T> *, RBTreeNode<T> *, RBTreeNode<T> *);
         void getInOrderVector(RBTreeNode<T> *, RBTreeNode<T> *, vector<T> &);
+        void inOrderCopy(RBTreeNode<T> *); //Helper function for assignment operator
         bool findInArray(T, T *, int);
         int countHelper(RBTreeNode<T> *, T, int &);
     
@@ -101,11 +102,24 @@
     Method: Clear the current tree, then copy the current one to it*/
     template <class T>
     Multiset<T>& Multiset<T>::operator=(const Multiset<T> &rightMultiset) {
-        clear(); 
-        RBTreeNode<T> *tempPtr; //Temp ptr so the copy function can return something
-        tempPtr = this.copy(rightMultiset.root, rightMultiset.NIL);
-        this->size = rightMultiset->size; //Multisetting the sizes to be equal
-        return *this; //Return the current tree
+        if(this == &rightMultiset) {
+            return *this;
+        }
+        this->clear(); //clearing the current tree
+        inOrderCopy(rightMultiset.root);
+        this->size = rightMultiset.size; 
+        return *this;
+    }
+
+    /* inOrderCopy - copy set from the given tree to the current tree 
+    Method: Perform an in-order transversal and insert them into this tree */
+    template <class T>
+    void Multiset<T>::inOrderCopy(RBTreeNode<T> *nodePtr) {
+        if(nodePtr != this->NIL) {
+            inOrderCopy(nodePtr->left);
+            this->insert(nodePtr->value);
+            inOrderCopy(nodePtr->right);
+        }
     }
 
     /* Clear function - clears the current tree of all elements 
@@ -136,11 +150,11 @@
     int iterator - the current point in the array
     Returns: An array of in-order elements */
     template <class T>
-    void Multiset<T>::getInOrderHelper(RBTreeNode<T> *nodePtr, RBTreeNode<T> *nilPtr, T *&elementArray, int iterator) {
-        if (nodePtr != nilPtr) {
-		    getInOrderHelper(nodePtr->left, nilPtr, elementArray, iterator);
+    void Multiset<T>::getInOrderHelper(RBTreeNode<T> *nodePtr, T *&elementArray, int iterator) {
+        if (nodePtr != this->NIL) {
+		    getInOrderHelper(nodePtr->left, elementArray, iterator);
 		    elementArray[iterator++] = nodePtr->value;
-		    getInOrderHelper(nodePtr->right, nilPtr, elementArray, iterator);
+		    getInOrderHelper(nodePtr->right, elementArray, iterator);
 	    } 
     }
 
@@ -207,11 +221,11 @@
     /* insert function - inserts an element into the set 
     Parameters: The value of the element to insert
     Method: Inserts an element into the Red-Black tree
-    Notes: An override is not necessary */
+    Notes: An override is not necessary 
     template <class T>
     void Multiset<T>::insert(T elementToInsert) {
         RBTree<T>::insert(elementToInsert);
-    }
+    } */
 
     template <class T>
     bool Multiset<T>::operator==(const Multiset<T> &rightSide) {

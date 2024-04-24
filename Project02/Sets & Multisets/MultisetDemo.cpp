@@ -22,11 +22,12 @@ int main() {
    }
 
    //Inserting elements into a multiSet
-   cout << "Inserting elements into multiSet (5, 4, 4, 3, 3, 2, 2, 1, 1, 1)" << endl;
-   for(int i = 10; i > 0; i--) {
-      multiSet.insert(i/2);
+   cout << "Inserting elements into multiSet (1-8)" << endl;
+   for(int i = 8; i > 0; i--) {
+      multiSet.insert(i);
    }
    if(multiSet.find(1)) {
+      cout << "1 is in the set" << endl;
       cout << multiSet << endl; //Printing the multiSet
    }
    cout << "Multiset Count of 1: " << multiSet.count(1) << endl;
@@ -37,16 +38,20 @@ int main() {
 
 
    //Erasing and inserting
+   cout << "Inserting 1, 5, and 12" << endl;
    multiSet.insert(1);
    multiSet.insert(5);
    multiSet.insert(12);
    cout << multiSet << endl << endl;
-   multiSet.erase(2);
+   cout << "Attempting to erase elements that are not in the set: " << endl;
    multiSet.erase(15);
+   cout << "Erasing elements in the set" << endl;
+   multiSet.erase(2);
    cout << multiSet << endl << endl;
 
    //Making a new multiSet
-   Multiset<int> multiSet2 = multiSet;
+   Multiset<int> multiSet2;
+   multiSet2 = multiSet;
    cout << "New multiSet using assignment: " << multiSet2 << endl;
 
    //Logical operators

@@ -106,7 +106,8 @@ RBTree<T>::RBTree(RBTree<T> &copyTree) {
       if (nodePtr->right != NIL) {
          newNode->right->parent = newNode;
       }
-      delete nodePtr;
+      
+	  return newNode;
    }
 
 template<class T>

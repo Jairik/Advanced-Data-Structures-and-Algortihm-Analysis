@@ -137,7 +137,7 @@ using namespace std; //Simplifying
     Parameter: T element - the element to search for*/
     template <class T>
     bool Set<T>::find(T element) {
-        return findNode(element); //Calls function from RBTree
+        return RBTreeNode:findNodeHelper(element); //Calls function from RBTree
     }
 
     /* isEmpty function - returns if the set is empty */
@@ -439,8 +439,8 @@ using namespace std; //Simplifying
     Set<T>& Set<T>::operator-(const Set<T> rightSide) {
         T *rightArray = rightSide.getInOrder();
         T *leftArray = this.getInOrder();
-        int rightSize = leftSide->size;
-        int leftSize = rightSide->size;
+        int rightSize = rightSide->size;
+        int leftSize = this->size;
         Set<T> newSet;
         int i = 0; //Getting iterator for while loop
         for(int i = 0; i < rightSize; i++) {
