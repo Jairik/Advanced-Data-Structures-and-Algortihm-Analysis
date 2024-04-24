@@ -18,8 +18,8 @@
     private:
         int size; //Increments or decrements based on insertions
         T* getInOrder(); //Returns array of inordered elements 
-        void getInOrderHelper(RBTreeNode<T> *, RBTreeNode<T> *, T *&, int); 
-        bool equalsOperatorHelper(RBTreeNode<T> *, RBTreeNode<T> *, RBTreeNode<T> *, RBTreeNode<T> *);
+        void getInOrderHelper(RBTreeNode<T> *, T *&, int); 
+        bool equalsOperatorHelper(RBTreeNode<T> *, RBTreeNode<T> *, RBTreeNode<T> *);
         void getInOrderVector(RBTreeNode<T> *, RBTreeNode<T> *, vector<T> &);
         void inOrderCopy(RBTreeNode<T> *); //Helper function for assignment operator
         bool findInArray(T, T *, int);

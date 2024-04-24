@@ -59,7 +59,7 @@ protected:
 
 	void destroySubTree(RBTreeNode<T> *);
 
-	RBTreeNode<T> *copy(RBTreeNode<T> *); //Helper function for copy constructor
+	RBTreeNode<T> *copy(RBTreeNode<T> *, RBTreeNode<T> *); //Helper function for copy constructor
 
 	color_t getRed() { return RED; } //Helper function that returns enumerated type RED
 
@@ -77,43 +77,46 @@ public:
 	void PrintTree(int Indent = 4, int Level = 0);
 };
 
+template<class T>
+RBTree<T>::RBTree() {
+	NIL = new RBTreeNode<T>(T(), BLACK, nullptr, nullptr, nullptr);
+	root = NIL;
+}
+
 /* Copy contructor for tree 
   Parameters: Tree to be copied */
 template <class T>
 RBTree<T>::RBTree(RBTree<T> &copyTree) {
-	root = copy(copyTree.root); //Invokes helper function
+	this->NIL = new RBTreeNode<T>();
+	this->NIL->left = this->NIL->right = this->NIL->parent = this->NIL; //I didn't even know that you could do this
+    this->root = copy(copyTree.root, copyTree.NIL);
 }
 
 /* Helper function for copy contructor, will recursively insert nodes into RB Tree
    Parameters: nodePtr to copied tree
    NILPtr that points to the NIL node of the copied tree */
-   template <class T>
-   RBTreeNode<T> *RBTree<T>::copy(RBTreeNode<T> *nodePtr) {
-      if (nodePtr == NIL) { //base case
-         return NIL;
-      }
-      //Creating a new Node in this RBT to insert
-      RBTreeNode<T> *newNode = new RBTreeNode<T>();
-      //Copying the values of the node from the copied tree
-      newNode->value = nodePtr->value;
-	  newNode->color = nodePtr->color;
-      newNode->left = copy(nodePtr->left);
-      newNode->right = copy(nodePtr->right);
-      //Ensuring that the parent pointers are correctly set up
-      if (nodePtr->left != NIL) {
-         newNode->left->parent = newNode;
-      }
-      if (nodePtr->right != NIL) {
-         newNode->right->parent = newNode;
-      }
-      
-	  return newNode;
-   }
+template <class T>
+RBTreeNode<T>* RBTree<T>::copy(RBTreeNode<T>* nodePtr, RBTreeNode<T>* NIL) {
+    if (nodePtr == NIL) { //Base case
+        return NIL; 
+    }
 
-template<class T>
-RBTree<T>::RBTree() {
-	NIL = new RBTreeNode<T>(T(), BLACK, nullptr, nullptr, nullptr);
-	root = NIL;
+    //Make a new node and copy the data
+    RBTreeNode<T>* newNode = new RBTreeNode<T>();
+    newNode->value = nodePtr->value;
+    newNode->color = nodePtr->color;
+	//Set children
+    newNode->left = copy(nodePtr->left, NIL);
+    newNode->right = copy(nodePtr->right, NIL);
+    //Set parents
+    if (newNode->left != NIL) {
+        newNode->left->parent = newNode;
+    }
+    if (newNode->right != NIL) {
+        newNode->right->parent = newNode;
+    }
+
+    return newNode;
 }
 
 template<class T>
