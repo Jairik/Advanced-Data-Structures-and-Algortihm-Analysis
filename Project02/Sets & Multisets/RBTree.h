@@ -59,14 +59,14 @@ protected:
 
 	void destroySubTree(RBTreeNode<T> *);
 
-	RBTreeNode<T> *copy(RBTreeNode<T> *, RBTreeNode<T> *); //Helper function for copy constructor
+	RBTreeNode<T> *copy(RBTreeNode<T> *); //Helper function for copy constructor
 
 	color_t getRed() { return RED; } //Helper function that returns enumerated type RED
 
 public:
 	RBTree();
 	virtual ~RBTree();
-	RBTree(const RBTree<T> &); //Copy contructor
+	RBTree(RBTree<T> &); //Copy contructor
 
 	virtual void insert(T);
 	void remove(T);
@@ -80,27 +80,25 @@ public:
 /* Copy contructor for tree 
   Parameters: Tree to be copied */
 template <class T>
-RBTree<T>::RBTree(const RBTree<T> &copy) {
-	RBTreeNode<T> *nodePtr = copy.root;
-    RBTreeNode<T> *NILPtr = copy.NIL;
-	root = copy(nodePtr, NILPtr); //Invokes helper function
+RBTree<T>::RBTree(RBTree<T> &copyTree) {
+	root = copy(copyTree.root); //Invokes helper function
 }
 
 /* Helper function for copy contructor, will recursively insert nodes into RB Tree
    Parameters: nodePtr to copied tree
    NILPtr that points to the NIL node of the copied tree */
    template <class T>
-   RBTreeNode<T> *RBTree<T>::copy(RBTreeNode<T> *nodePtr, RBTreeNode<T> *NILPtr) {
-      if (nodePtr == NILPtr) { //base case
+   RBTreeNode<T> *RBTree<T>::copy(RBTreeNode<T> *nodePtr) {
+      if (nodePtr == NIL) { //base case
          return NIL;
       }
       //Creating a new Node in this RBT to insert
       RBTreeNode<T> *newNode = new RBTreeNode<T>();
       //Copying the values of the node from the copied tree
       newNode->value = nodePtr->value;
+	  newNode->color = nodePtr->color;
       newNode->left = copy(nodePtr->left);
       newNode->right = copy(nodePtr->right);
-      newNode->color = nodePtr->color;
       //Ensuring that the parent pointers are correctly set up
       if (nodePtr->left != NIL) {
          newNode->left->parent = newNode;
@@ -250,7 +248,7 @@ RBTreeNode<T>* RBTree<T>::getMinNode(RBTreeNode<T> *x) {
  */
 template<class T>
 void RBTree<T>::remove(T val) {
-	RBTreeNode<T> *z = this->findNode(val);
+	RBTreeNode<T> *z = findNodeHelper(val);
 	if (z == NIL)
 		return;
 
