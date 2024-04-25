@@ -31,14 +31,12 @@ using namespace std;
         map.insert(5, "John");
         map.insert(2, "Sam");
         map.insert(17, "Jack");
-        map.insert(19, "Jill");
         map.insert(23, "Jordan");
         cout << map << endl << endl;
 
         //Erasing elements
-        cout << "Erasing John and Jill, too many J names" << endl;
+        cout << "Erasing John, too many J names" << endl;
         map.erase(5);
-        map.erase(19);
         cout << map << endl << endl;
 
         //Replacing with insert & set
@@ -48,14 +46,14 @@ using namespace std;
         cout << map << endl << endl;
 
         //Getting elements
-        cout << "Key 19: " << map.get(19);
+        //cout << "Key 19: " << map.get(19);
 
-        //Making a new set
+        //Making a new map
         Map<int, string> map2;
         map2 = map;
         cout << "New map assigned to current map" << endl;
         
-        //Testing the == and != operators
+        /*Testing the == and != operators
         cout << "The two maps are equal: ";
         if(map == map2) {
             cout << "true" << endl;
@@ -69,7 +67,7 @@ using namespace std;
         }
         else {
             cout << "false" << endl << endl;
-        }
+        } */
 
         //Find function
         cout << "Key 19 is in the first map: ";
@@ -80,9 +78,9 @@ using namespace std;
             cout << "false" << endl << endl;
         }
 
-        //Clear function
+        /*Clear function
         cout << "Erasing the second map" << endl;
         map2.clear();
-        cout << map2 << endl;
+        cout << map2 << endl; */
 
     }

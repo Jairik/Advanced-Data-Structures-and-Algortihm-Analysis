@@ -6,8 +6,8 @@
 
 /* -------------------------- Multiset Header File ---------------------------- 
    Author: JJ McCauley
-   Creation Date: 4/23/24
-   Last Update: 4/23/24
+   Creation Date: 4/18/24
+   Last Update: 4/24/24
    Notes: Inherits properties from the Red-Black Tree. This is also very similar
    to Sets, except for a few behavior changes.
    ---------------------------------------------------------------------------- */
@@ -21,7 +21,7 @@
         void getInOrderHelper(RBTreeNode<T> *, T *&, int); 
         bool equalsOperatorHelper(RBTreeNode<T> *, RBTreeNode<T> *, RBTreeNode<T> *, RBTreeNode<T> *);
         void getInOrderVector(RBTreeNode<T> *, RBTreeNode<T> *, vector<T> &);
-        void inOrderCopy(RBTreeNode<T> *); //Helper function for assignment operator
+        void inOrderCopy(RBTreeNode<T> *, RBTreeNode<T> *); //Helper function for assignment operator
         bool findInArray(T, T *, int);
         int countHelper(RBTreeNode<T> *, T, int &);
     
@@ -102,24 +102,19 @@
     Method: Clear the current tree, then copy the current one to it*/
     template <class T>
     Multiset<T>& Multiset<T>::operator=(const Multiset<T> &rightMultiset) {
-        if(this == &rightMultiset) {
-            return *this;
-        }
-        this->clear(); //clearing the current tree
-        this->root = this->NIL;
-        inOrderCopy(rightMultiset.root);
-        this->size = rightMultiset.size; 
+        clear();
+        inOrderCopy(rightMultiset.root, rightMultiset.NIL);
         return *this;
     }
 
     /* inOrderCopy - copy set from the given tree to the current tree 
     Method: Perform an in-order transversal and insert them into this tree */
     template <class T>
-    void Multiset<T>::inOrderCopy(RBTreeNode<T> *nodePtr) {
+    void Multiset<T>::inOrderCopy(RBTreeNode<T> *nodePtr, RBTreeNode<T> *NILPtr) {
         if(nodePtr != this->NIL) {
-            inOrderCopy(nodePtr->left);
+            inOrderCopy(nodePtr->left, NILPtr);
             this->insert(nodePtr->value);
-            inOrderCopy(nodePtr->right);
+            inOrderCopy(nodePtr->right, NILPtr);
         }
     }
 
@@ -521,7 +516,7 @@
             if(count != size-1) {
                 sysout << ", ";
             }
-            count++; sysout << " c: " << count;
+            count++;
             displayInOrder(nodePtr->right, sysout, count, size);
         }
     }

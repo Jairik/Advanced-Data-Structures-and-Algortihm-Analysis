@@ -1,11 +1,13 @@
 /* ---------------------------- RBTree Header File ---------------------------- 
    This provided code will inhertied to implement Maps and Multimaps.
+   Adapted to work with maps (each node has a key and value)
    ---------------------------------------------------------------------------- */
 
 #ifndef RBTREE_H_
 #define RBTREE_H_
 
 #include <iostream>
+#include <vector>
 #include <string>
 using namespace std;
 
@@ -14,26 +16,30 @@ enum color_t {
 		// Red = 0, Black = 1
 	};
 
-template<class T>
+template<class T, class V>
 class RBTreeNode {
 public:
 
-	T value;
+	T key;
+	vector<V> value; //Values will be stored in a vector
 	color_t color;
 	RBTreeNode *left;
 	RBTreeNode *right;
 	RBTreeNode *parent;
 
 	RBTreeNode() {
+		key = NULL;
+		value = NULL;
 		left = nullptr;
 		right = nullptr;
 		parent = nullptr;
 		color = RED;
 	}
 
-	RBTreeNode(T val, color_t col, RBTreeNode *l, RBTreeNode *r,
+	RBTreeNode(T nKey, V val, color_t col, RBTreeNode *l, RBTreeNode *r,
 			RBTreeNode *p) {
-		value = val;
+		key = nKey;
+		value.push_back(val);
 		left = l;
 		right = r;
 		parent = p;
@@ -41,84 +47,47 @@ public:
 	}
 };
 
-template<class T>
+template<class T, class V>
 class RBTree {
 protected:
-	RBTreeNode<T> *root;
-	RBTreeNode<T> *NIL;
+	RBTreeNode<T, V> *root;
+	RBTreeNode<T, V> *NIL;
 	void IndentBlock(int num);
-	void PrintTree(RBTreeNode<T>*, int, int);
+	void PrintTree(RBTreeNode<T, V>*, int, int);
 
-	void LeftRotation(RBTreeNode<T>*);
-	void RightRotation(RBTreeNode<T>*);
-	void insertFix(RBTreeNode<T>*);
+	void LeftRotation(RBTreeNode<T, V>*);
+	void RightRotation(RBTreeNode<T, V>*);
+	void insertFix(RBTreeNode<T, V>*);
 
-	void transplant(RBTreeNode<T>*, RBTreeNode<T>*);
-	void deleteFix(RBTreeNode<T>*);
-	RBTreeNode<T>* getMinNode(RBTreeNode<T>*);
+	void transplant(RBTreeNode<T, V>*, RBTreeNode<T, V>*);
+	void deleteFix(RBTreeNode<T, V>*);
+	RBTreeNode<T, V>* getMinNode(RBTreeNode<T, V>*);
 
-	void destroySubTree(RBTreeNode<T> *);
-
-	RBTreeNode<T> *copy(RBTreeNode<T> *,RBTreeNode<T> *); //Helper function for copy constructor
+	void destroySubTree(RBTreeNode<T, V> *);
 
 	color_t getRed() { return RED; } //Helper function that returns enumerated type RED
 
 public:
 	RBTree();
 	virtual ~RBTree();
-	RBTree(RBTree<T> &); //Copy contructor
 
-	virtual void insert(T);
+	virtual void insert(T, V);
 	void remove(T);
 
 	bool findNode(const T &item);
-	RBTreeNode<T>* findNodeHelper(const T&);
+	RBTreeNode<T, V>* findNodeHelper(const T&);
 
 	void PrintTree(int Indent = 4, int Level = 0);
 };
 
-/* Copy contructor for tree 
-  Parameters: Tree to be copied */
-template <class T>
-RBTree<T>::RBTree(RBTree<T> &copy) {
-	RBTreeNode<T> *nodePtr = copy.root;
-   RBTreeNode<T> *NILPtr = copy.NIL;
-	root = copy(nodePtr, NILPtr); //Invokes helper function
-}
-
-/* Helper function for copy contructor, will recursively insert nodes into RB Tree
-   Parameters: nodePtr to copied tree
-   NILPtr that points to the NIL node of the copied tree */
-   template <class T>
-   RBTreeNode<T> *RBTree<T>::copy(RBTreeNode<T> *nodePtr, RBTreeNode<T> *NILPtr) {
-      if (nodePtr == NILPtr) { //base case
-         return NIL;
-      }
-      //Creating a new Node in this RBT to insert
-      RBTreeNode<T> *newNode = new RBTreeNode<T>();
-      //Copying the values of the node from the copied tree
-      newNode->value = nodePtr->value;
-      newNode->left = copy(nodePtr->left, NILPtr);
-      newNode->right = copy(nodePtr->right, NILPtr);
-      newNode->color = nodePtr->color;
-      //Ensuring that the parent pointers are correctly set up
-      if (nodePtr->left != NILPtr) {
-         newNode->left->parent = newNode;
-      }
-      if (nodePtr->right != NILPtr) {
-         newNode->right->parent = newNode;
-      }
-      delete nodePtr;
-   }
-
-template<class T>
-RBTree<T>::RBTree() {
-	NIL = new RBTreeNode<T>(T(), BLACK, nullptr, nullptr, nullptr);
+template <class T, class V>
+RBTree<T, V>::RBTree() {
+	NIL = new RBTreeNode<T, V>(T(), V(), BLACK, nullptr, nullptr, nullptr);
 	root = NIL;
 }
 
-template<class T>
-RBTree<T>::~RBTree() {
+template <class T, class V>
+RBTree<T, V>::~RBTree() {
 	destroySubTree(root);
 	delete NIL;
 }
@@ -126,8 +95,8 @@ RBTree<T>::~RBTree() {
 /*
  * Recursively frees the memory of the subtree pointed to by nodePtr.
  */
-template<class T>
-void RBTree<T>::destroySubTree(RBTreeNode<T> *nodePtr) {
+template <class T, class V>
+void RBTree<T, V>::destroySubTree(RBTreeNode<T, V> *nodePtr) {
 	if (nodePtr != NIL) {
 		if (nodePtr->left != NIL)
 			destroySubTree(nodePtr->left);
@@ -140,24 +109,25 @@ void RBTree<T>::destroySubTree(RBTreeNode<T> *nodePtr) {
 /*
  * Inserts a new node into the RB-Tree as with a standard BST but then calls the
  * insertFix function to adjust the tree back to an RB tree.
+ * Note: Overriden in both functions
  */
-template<class T>
-void RBTree<T>::insert(T val) {
-	RBTreeNode<T> *newnode = new RBTreeNode<T>(val, RED, NIL, NIL, NIL);
-	RBTreeNode<T> *y = NIL;
-	RBTreeNode<T> *x = root;
+template <class T, class V>
+void RBTree<T, V>::insert(T ckey, V val) {
+	RBTreeNode<T, V> *newnode = new RBTreeNode<T,V>(ckey, val, RED, NIL, NIL, NIL);
+	RBTreeNode<T, V> *y = NIL;
+	RBTreeNode<T, V> *x = root;
 
 	while (x != NIL) {
 		y = x;
-		if (val < x->value)
+		if (ckey < x->key)
 			x = x->left;
-		else
+		else 
 			x = x->right;
 	}
 	newnode->parent = y;
 	if (y == NIL)
 		root = newnode;
-	else if (newnode->value < y->value)
+	else if (newnode->key < y->key)
 		y->left = newnode;
 	else
 		y->right = newnode;
@@ -169,9 +139,9 @@ void RBTree<T>::insert(T val) {
 /*
  * Adjusts the tree back to an RB tree after insertion of a new node.
  */
-template<class T>
-void RBTree<T>::insertFix(RBTreeNode<T> *z) {
-	RBTreeNode<T> *y = NIL;
+template <class T, class V>
+void RBTree<T, V>::insertFix(RBTreeNode<T, V> *z) {
+	RBTreeNode<T, V> *y = NIL;
 
 	while (z->parent->color == RED) {
 		if (z->parent == z->parent->parent->left) {
@@ -214,8 +184,8 @@ void RBTree<T>::insertFix(RBTreeNode<T> *z) {
 /*
  * This is a helper function to the node deletion process.
  */
-template<class T>
-void RBTree<T>::transplant(RBTreeNode<T> *u, RBTreeNode<T> *v) {
+template <class T, class V>
+void RBTree<T, V>::transplant(RBTreeNode<T, V> *u, RBTreeNode<T, V> *v) {
 	if (u->parent == NIL)
 		root = v;
 	else if (u == u->parent->left)
@@ -231,12 +201,12 @@ void RBTree<T>::transplant(RBTreeNode<T> *u, RBTreeNode<T> *v) {
  * tracks x's parent so that when x == NIL, y is the minimum valued
  * node.
  */
-template<class T>
-RBTreeNode<T>* RBTree<T>::getMinNode(RBTreeNode<T> *x) {
+template <class T, class V>
+RBTreeNode<T, V>* RBTree<T, V>::getMinNode(RBTreeNode<T, V> *x) {
 	if (x == NIL)
 		return NIL;
 
-	RBTreeNode<T> *y = NIL;
+	RBTreeNode<T, V> *y = NIL;
 	while (x != NIL) {
 		y = x;
 		x = x->left;
@@ -248,14 +218,14 @@ RBTreeNode<T>* RBTree<T>::getMinNode(RBTreeNode<T> *x) {
  * Finds and deletes the node whose value is val.  Calls the deleteFix function
  * to readjust the tree back to RB format.
  */
-template<class T>
-void RBTree<T>::remove(T val) {
-	RBTreeNode<T> *z = findNodeHelper(val);
+template <class T, class V>
+void RBTree<T, V>::remove(T key) {
+	RBTreeNode<T, V> *z = findNodeHelper(key);
 	if (z == NIL)
 		return;
 
-	RBTreeNode<T> *y = z;
-	RBTreeNode<T> *x = NIL;
+	RBTreeNode<T, V> *y = z;
+	RBTreeNode<T, V> *x = NIL;
 	color_t yorigcol = y->color;
 
 	if (z->left == NIL) {
@@ -289,9 +259,9 @@ void RBTree<T>::remove(T val) {
  * Readjusts the RB tree to fix any violated properties after the deletion of a
  * node.
  */
-template<class T>
-void RBTree<T>::deleteFix(RBTreeNode<T> *x) {
-	RBTreeNode<T> *w = NIL;
+template <class T, class V>
+void RBTree<T, V>::deleteFix(RBTreeNode<T, V> *x) {
+	RBTreeNode<T, V> *w = NIL;
 
 	while (x != root && x->color == BLACK) {
 		if (x == x->parent->left) {
@@ -352,8 +322,8 @@ void RBTree<T>::deleteFix(RBTreeNode<T> *x) {
  * It simply calls the node based recursive version and checks the result
  * against the NIL object.
  */
-template<class T>
-bool RBTree<T>::findNode(const T &item) {
+template <class T, class V>
+bool RBTree<T, V>::findNode(const T &item) {
 	return findNodeHelper(item) != NIL;
 }
 
@@ -365,9 +335,9 @@ bool RBTree<T>::findNode(const T &item) {
  x --- pointer to the node to rotate right around.
  */
 
-template<class T>
-void RBTree<T>::RightRotation(RBTreeNode<T> *x) {
-	RBTreeNode<T> *y = x->left;
+template <class T, class V>
+void RBTree<T, V>::RightRotation(RBTreeNode<T, V> *x) {
+	RBTreeNode<T, V> *y = x->left;
 	x->left = y->right;
 
 	if (y->right != NIL)
@@ -394,9 +364,9 @@ void RBTree<T>::RightRotation(RBTreeNode<T> *x) {
  nodePtr --- pointer to the node to rotate right around.
  */
 
-template<class T>
-void RBTree<T>::LeftRotation(RBTreeNode<T> *x) {
-	RBTreeNode<T> *y = x->right;
+template <class T, class V>
+void RBTree<T, V>::LeftRotation(RBTreeNode<T, V> *x) {
+	RBTreeNode<T, V> *y = x->right;
 	x->right = y->left;
 
 	if (y->left != NIL)
@@ -416,16 +386,17 @@ void RBTree<T>::LeftRotation(RBTreeNode<T> *x) {
 }
 
 /*
- * Recursive find function that finds the first node containing the value item.
+ * Recursive find function that finds the first node containing the key.
+ * Parameter: The key to search for
  */
-template<class T>
-RBTreeNode<T>* RBTree<T>::findNodeHelper(const T &item) {
-	RBTreeNode<T> *nodePtr = root;
+template <class T, class V>
+RBTreeNode<T, V>* RBTree<T, V>::findNodeHelper(const T &item) {
+	RBTreeNode<T, V> *nodePtr = root;
 
 	while (nodePtr != NIL) {
-		if (nodePtr->value == item)
+		if (nodePtr->key == item)
 			return nodePtr;
-		else if (item < nodePtr->value)
+		else if (item < nodePtr->key)
 			nodePtr = nodePtr->left;
 		else
 			nodePtr = nodePtr->right;
@@ -437,8 +408,8 @@ RBTreeNode<T>* RBTree<T>::findNodeHelper(const T &item) {
 // Simple helper function to do the indentations for the tree
 // printing algorithm.
 //****************************************************************
-template<class T>
-void RBTree<T>::IndentBlock(int num) {
+template <class T, class V>
+void RBTree<T, V>::IndentBlock(int num) {
 	for (int i = 0; i < num; i++)
 		cout << " ";
 }
@@ -449,8 +420,8 @@ void RBTree<T>::IndentBlock(int num) {
 // This includes the height and balance factor of each node.
 //****************************************************************
 
-template<class T>
-void RBTree<T>::PrintTree(RBTreeNode<T> *t, int Indent, int Level) {
+template <class T, class V>
+void RBTree<T, V>::PrintTree(RBTreeNode<T, V> *t, int Indent, int Level) {
 	if (t != NIL) {
 		PrintTree(t->right, Indent, Level + 1);
 
@@ -474,8 +445,8 @@ void RBTree<T>::PrintTree(RBTreeNode<T> *t, int Indent, int Level) {
 // factor of each node.
 //****************************************************************
 
-template<class T>
-void RBTree<T>::PrintTree(int Indent, int Level) {
+template <class T, class V>
+void RBTree<T, V>::PrintTree(int Indent, int Level) {
 	if (root)
 		PrintTree(root, Indent, Level);
 }

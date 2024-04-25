@@ -45,16 +45,16 @@ int main() {
    cout << multiSet << endl << endl;
    cout << "Attempting to erase elements that are not in the set: " << endl;
    multiSet.erase(15);
-   cout << "Erasing elements in the set" << endl;
-   multiSet.erase(2);
-   cout << multiSet << endl << endl;
+   // cout << "Erasing elements in the set" << endl;
+   // multiSet.erase(2);
+   // cout << multiSet << endl << endl;
 
-   //Making a new multiSet
-   Multiset<int> multiSet2;
-   multiSet2 = multiSet;
-   cout << "New multiSet using assignment: " << multiSet2 << endl;
+   // //Making a new multiSet
+   // Multiset<int> multiSet2;
+   // multiSet2 = multiSet;
+   // cout << "New multiSet using assignment: " << multiSet2 << endl;
 
-   //Logical operators
+   /*Logical operators
    if(multiSet == multiSet2) {
       cout << "The multiSets are equal" << endl;
    }
@@ -92,7 +92,7 @@ int main() {
    //Clear function
    cout << "Clearing multiSet2" << endl;
    multiSet2.clear();
-   cout << "Multiset2: " << multiSet2 << endl;
+   cout << "Multiset2: " << multiSet2 << endl; */
 
    //toVector, toArray, getSize functions
    vector<int> multiSetV;

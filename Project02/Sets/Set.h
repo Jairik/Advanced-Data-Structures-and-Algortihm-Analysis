@@ -9,7 +9,7 @@ using namespace std; //Simplifying
 /* ---------------------------- Set Header File ---------------------------- 
    Author: JJ McCauley
    Creation Date: 4/18/24
-   Last Update: 4/23/24
+   Last Update: 4/24/24
    Notes: Inherits properties from the Red-Black Tree
    ---------------------------------------------------------------------------- */
 
@@ -20,12 +20,13 @@ using namespace std; //Simplifying
     private:
         int size; //Increments or decrements based on insertions
         T* getInOrder(); //Returns array of inordered elements 
-        void getInOrderHelper(RBTreeNode<T> *, RBTreeNode<T> *, T *&, int); 
+        void getInOrderHelper(RBTreeNode<T> *, RBTreeNode<T> *, T *&, int &); 
         bool equalsOperatorHelper(RBTreeNode<T> *, RBTreeNode<T> *, RBTreeNode<T> *, RBTreeNode<T> *);
         void getInOrderVector(RBTreeNode<T> *, RBTreeNode<T> *, vector<T> &);
-        void displayInOrder(RBTreeNode<T> *, ostream &, int &) const;
+        void displayInOrder(RBTreeNode<T> *, RBTreeNode<T> *, ostream &, int &);
         bool findInArray(T, T *, int);
         void inOrderCopy(RBTreeNode<T> *);
+        void copySet(RBTreeNode<T> *, RBTreeNode<T> *);
     
     public:
         //Constructs and deconstructors
@@ -54,7 +55,7 @@ using namespace std; //Simplifying
         Set<T> operator+(Set<T>); //Set union
         Set<T> operator*(Set<T>); //Set intersection
         Set<T> operator-(Set<T>); //Set difference
-        template <class U> friend ostream& operator<<(ostream&, const Set<U> &);
+        template <class U> friend ostream& operator<<(ostream&, Set<U> &);
 
    };
 
@@ -77,14 +78,20 @@ using namespace std; //Simplifying
     Method: Clear the current tree, then copy the current one to it*/
     template <class T>
     Set<T>& Set<T>::operator=(Set<T> &rightSet) {
-        if(this == &rightSet) {
-            return *this;
-        }
-        clear(); //clearing the current tree
-        this->root = this->NIL;
-        inOrderCopy(rightSet.root);
-        this->size = rightSet.size; 
+        clear();
+        copySet(rightSet.root, rightSet.NIL);
         return *this;
+    }
+
+    /*copySet - helper function that copies one set to another 
+    Method: In-order transversal through the right set*/
+    template <class T>
+    void Set<T>::copySet(RBTreeNode<T> *rNodePtr, RBTreeNode<T> *rNILPtr) {
+        if(rNodePtr != rNILPtr) {
+            copySet(rNodePtr->left, rNILPtr);
+            this->insert(rNodePtr->value);
+            copySet(rNodePtr->right, rNILPtr);
+        }
     }
 
     /* inOrderCopy - copy set from the given tree to the current tree 
@@ -114,7 +121,8 @@ using namespace std; //Simplifying
     T* Set<T>::getInOrder() {
         int numElements = getSize(); //Get the number of elements to allocate array
         T *elementArray = new T[numElements]; //Allocating space for elements
-        getInOrderHelper(this->root, this->NIL, elementArray, 0); //Get the in-order array
+        int iterator = 0;
+        getInOrderHelper(this->root, this->NIL, elementArray, iterator); //Get the in-order array
         return elementArray; //Returns the sorted in-order array
     }
 
@@ -124,7 +132,7 @@ using namespace std; //Simplifying
     int iterator - the current point in the array
     Returns: An array of in-order elements */
     template <class T>
-    void Set<T>::getInOrderHelper(RBTreeNode<T> *nodePtr, RBTreeNode<T> *nilPtr, T *&elementArray, int iterator) {
+    void Set<T>::getInOrderHelper(RBTreeNode<T> *nodePtr, RBTreeNode<T> *nilPtr, T *&elementArray, int &iterator) {
         if (nodePtr != nilPtr) {
 		    getInOrderHelper(nodePtr->left, nilPtr, elementArray, iterator);
 		    elementArray[iterator++] = nodePtr->value;
@@ -457,27 +465,26 @@ using namespace std; //Simplifying
 
     /* Operator << overload - prints out the set on a single line */
     template <class T> 
-    ostream& operator<<(ostream& os, const Set<T> &set) {
+    ostream& operator<<(ostream& os, Set<T> &set) {
         os << "{";
         RBTreeNode<T> *nodePtr = set.root;
         int count = 0;
-        set.displayInOrder(nodePtr, os, count);
+        set.displayInOrder(nodePtr, set.NIL, os, count);
         os << "}\n";
         return os;
     }
 
-    /* displayInOrder helper - prints out the set 
-    I have absolutely no clue why this is segfaulting */
+    /* displayInOrder helper - prints out the set */
     template<class T> 
-    void Set<T>::displayInOrder(RBTreeNode<T> *nodePtr, ostream &sysout, int &count) const {
-        if (nodePtr != this->NIL) {
-            displayInOrder(nodePtr->left, sysout, count);
+    void Set<T>::displayInOrder(RBTreeNode<T> *nodePtr, RBTreeNode<T> *NILPtr, ostream &sysout, int &count) {
+        if(nodePtr != NILPtr) {
+            displayInOrder(nodePtr->left, NILPtr, sysout, count);
             sysout << nodePtr->value;
-            if(count != (getSize()-1)) {
+            if(count != this->size) {
                 sysout << ", ";
                 count++;
             }
-            displayInOrder(nodePtr->right, sysout, count);
+            displayInOrder(nodePtr->right, NILPtr, sysout, count);
         }
     }
 

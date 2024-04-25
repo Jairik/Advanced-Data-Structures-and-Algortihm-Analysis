@@ -64,14 +64,11 @@ protected:
 
 	void destroySubTree(RBTreeNode<T, V> *);
 
-	RBTreeNode<T, V> *copy(RBTreeNode<T, V> *,RBTreeNode<T, V> *); //Helper function for copy constructor
-
 	color_t getRed() { return RED; } //Helper function that returns enumerated type RED
 
 public:
 	RBTree();
 	virtual ~RBTree();
-	RBTree(RBTree<T, V> &); //Copy contructor
 
 	virtual void insert(T, V);
 	void remove(T);
@@ -81,41 +78,6 @@ public:
 
 	void PrintTree(int Indent = 4, int Level = 0);
 };
-
-/* Copy contructor for tree 
-  Parameters: Tree to be copied */
-template <class T, class V>
-RBTree<T, V>::RBTree(RBTree<T, V> &copy) {
-	RBTreeNode<T, V> *nodePtr = copy.root;
-   RBTreeNode<T, V> *NILPtr = copy.NIL;
-	root = copy(nodePtr, NILPtr); //Invokes helper function
-}
-
-/* Helper function for copy contructor, will recursively insert nodes into RB Tree
-   Parameters: nodePtr to copied tree
-   NILPtr that points to the NIL node of the copied tree */
-   template <class T, class V>
-   RBTreeNode<T, V> *RBTree<T, V>::copy(RBTreeNode<T, V> *nodePtr, RBTreeNode<T, V> *NILPtr) {
-      if (nodePtr == NILPtr) { //base case
-         return NIL;
-      }
-      //Creating a new Node in this RBT to insert
-      RBTreeNode<T, V> *newNode = new RBTreeNode<T, V>();
-      //Copying the values of the node from the copied tree
-	  newNode->key = nodePtr->key;
-      newNode->value = nodePtr->value;
-      newNode->left = copy(nodePtr->left, NILPtr);
-      newNode->right = copy(nodePtr->right, NILPtr);
-      newNode->color = nodePtr->color;
-      //Ensuring that the parent pointers are correctly set up
-      if (nodePtr->left != NILPtr) {
-         newNode->left->parent = newNode;
-      }
-      if (nodePtr->right != NILPtr) {
-         newNode->right->parent = newNode;
-      }
-      delete nodePtr;
-   }
 
 template <class T, class V>
 RBTree<T, V>::RBTree() {

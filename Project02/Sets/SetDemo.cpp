@@ -41,15 +41,15 @@ int main() {
    set.erase(15);
    cout << set << endl << endl;
 
-   //Making a new set
+   //Making a new set (segfaulting?)
    Set<int> set2 = set;
-   cout << "New set using assignment: " << set2 << endl;
+   cout << "New set made" << endl << endl;
 
-   //Logical operators
+   /*Logical operators 
    if(set == set2) {
       cout << "The sets are equal" << endl;
-   }
-   set2.erase(2);
+   } 
+   //set2.erase(2);
    if(set != set2) {
       cout << "Erased 2, sets are now not equal" << endl;
    }
@@ -70,7 +70,7 @@ int main() {
    }
    if(set <= set2) {
       cout << "___ is a subset of ___" << endl;
-   }
+   } 
    
    //+, *, - operators
    Set<int> setIntersection = set * set2;
@@ -83,7 +83,7 @@ int main() {
    //Clear function
    cout << "Clearing set2" << endl;
    set2.clear();
-   cout << "Multiset2: " << set2 << endl;
+   cout << "Multiset2: " << set2 << endl; */
 
    //toVector, toArray, getSize functions
    vector<int> setV;
@@ -100,6 +100,7 @@ int main() {
          cout << setV[i] << "}" << endl;
       }
    }
+   //Unexpected output
    cout << "Array: {";
    for(int i = 0; i < setSize; i++) {
       if(i+1 != setSize) { 
@@ -110,5 +111,6 @@ int main() {
       }
    }
 
-   //cout << "Compiled Successfully, yipee!" << endl;
+   //Initiating segfault...
+
    }
