@@ -1,13 +1,13 @@
 PROG = prog
 CC = g++
 CPPFLAGS = -g -Wall
-OBJS = Miltimap.o
+OBJS = MiltimapDemo.o
 
 $(PROG) : $(OBJS)
 	$(CC) -o $(PROG) $(OBJS)
 
-Miltimap.o : Miltimap.cpp
-	$(CC) $(CPPFLAGS) -c Miltimap.cpp
+MiltimapDemo.o : MiltimapDemo.cpp
+	$(CC) $(CPPFLAGS) -c MiltimapDemo.cpp
 
 clean:
 	rm -f core $(PROG) $(OBJS)
