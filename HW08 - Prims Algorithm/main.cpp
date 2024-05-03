@@ -36,10 +36,13 @@ int main() {
 
   div();
 
-  // WGraph<char, int> MST = KruskalAlgorithm(G);
-  // MST.sortVertexList();
-  // MST.print();
-  // MST.saveGraphFileGML("MST");
+  cout << "Minimal Spanning Tree - Kruskal Algorithm" << endl;
+  WGraph<char, int> MST1 = KruskalAlgorithm(G); //Getting minimal spanning tree
+  MST1.sortVertexList(); //Sorting for cleaner appearance
+  MST1.print(); //Printing to the console
+  MST1.saveGraphFileGML("Kruskal_Minimal_Spanning_Tree"); //Saving to graph file
+
+  div();
 
   cout << "Minimal Spanning Tree - Jarnik Prim Algorithm" << endl;
   WGraph<char, int> MST = JarnikPrimAlgorithm(G); //Getting minimal spanning tree
@@ -48,7 +51,7 @@ int main() {
   cout << "Vertexes sorted" << endl;
   MST.print(); //Printing to the console
   cout << "What the actual fuck " <<endl;
-  MST.saveGraphFileGML("Minimal_Spanning_Tree"); //Saving to graph file
+  MST.saveGraphFileGML("JarnikPrim_Minimal_Spanning_Tree"); //Saving to graph file
   cout << "Wrote to GML file" << endl;
 
   return 0;
@@ -61,47 +64,7 @@ Parameter: A weighted, connected, undirected graph
 Returns: The mimimal spanning tree*/
 template <class T, class W> 
 WGraph<T, W> JarnikPrimAlgorithm(WGraph<T, W> &g) {
-
-  //Booleans for conditional statements
-  bool isIncident;
-  bool formsCycle;
-  WGraph<T,W> MST; //Creating an undirected weighted graph to hold the Minimal-Spanning Tree
-
-  //Getting and sorting all of the edges in a vector called edges
-  vector<pair<T, pair<T, W>>> edges = g.getEdgeList();
-  if(edges.empty()) { return MST; } //If there are no edges, return empty MST
-  sort(edges.begin(), edges.end(), [](auto &a, auto &b) { return a.second.second < b.second.second; });
-
-  //Getting necessary sizes for the for-loop
-  int numVerticies = g.numVertices(); //|verticies|
-  cout << "Num of verticies: " << numVerticies << endl;
-  int numEdges = edges.size(); //|edges|
-  cout << "Num of Edges: " << numEdges << endl;
-
-  //Looping over verticies
-  for(int i = 1; i < numVerticies-1; i++) {
-    //Looping over edges
-    for(int j = 1; j < numEdges; j++) {
-
-      //Checking to see if adding the jth edge forms a cycle
-      WGraph<T, W> tempMST = MST;
-      tempMST.addEdge(edges[j]);
-      formsCycle = detectCycles(tempMST);
-
-      //Getting incident conditional
-      isIncident = (!(MST.getAdjacentList(edges[j].first).empty()) || 
-                   !(MST.getAdjacentList(edges[j].second.first).empty()));
-      /*If the jth edge does not form a cycle with the current MST AND 
-      if the jth edge connects to a vertex already in the current MST*/
-      if(!formsCycle && !isIncident) {
-        cout << "Inserting edge" << endl;
-        //insert the jth edge and break edge iteration
-        MST.addEdge(edges[j]);
-        break;
-      }
-    }
-  }
-  return MST; //Returning the minimal spanning tree
+  
 }
 
 
