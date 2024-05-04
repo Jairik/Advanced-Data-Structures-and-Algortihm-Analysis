@@ -64,7 +64,32 @@ Parameter: A weighted, connected, undirected graph
 Returns: The mimimal spanning tree*/
 template <class T, class W> 
 WGraph<T, W> JarnikPrimAlgorithm(WGraph<T, W> &g) {
-  
+  //Getting new MST to modify
+  WGraph<T, W> MST;
+  //Getting sorted edge list
+  vector<pair<T, pair<T, W>>> edges = G.getEdgeList();
+  sort(edges.begin(), edges.end(),
+       [](auto &a, auto &b) { return a.second.second < b.second.second; });
+
+  //Getting relevant counts
+  int MSTedgecount = 0; //Counter for edges in MST
+  int GVertSize = G.size(); //Size of Verticies 
+  int GEdgeSize = edges.size(); //Size of edges
+
+  for (size_t i = 0; i < edges.size() && MSTedgecount < Gvertcount - 1; i++) {
+    // If the edge is already in the graph move to the next one.
+    if (MST.getEdgePos(edges[i].first, edges[i].second.first) != -1)
+      continue;
+
+    WGraph<T, W> TestMST = MST;
+    TestMST.addEdge(edges[i]);
+    if (!detectCycles(TestMST)) {
+      MST.addEdge(edges[i]);
+      MSTedgecount++;
+    }
+  }
+
+  return MST;
 }
 
 
