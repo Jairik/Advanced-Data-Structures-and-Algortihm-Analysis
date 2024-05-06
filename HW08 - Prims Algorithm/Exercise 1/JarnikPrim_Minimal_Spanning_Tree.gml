@@ -143,6 +143,29 @@ graph
 			model "null"
 		]
 	]
+	node
+	[
+		id 6
+		label "g"
+		graphics
+		[
+			x 0
+			y 300
+			w 80
+			h 40
+			customconfiguration "com.yworks.flowchart.start2"
+			fill "#E8EEF7"
+			fill2 "#B7C9E3"
+			outline "#000000"
+		]
+		LabelGraphics
+		[
+			text "g"
+			fontSize 12
+			fontName "Dialog"
+			model "null"
+		]
+	]
 	edge
 	[
 		source 0
@@ -165,16 +188,6 @@ graph
 	]
 	edge
 	[
-		source 1
-		target 4
-		label "13"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
 		source 2
 		target 5
 		label "12"
@@ -186,8 +199,28 @@ graph
 	edge
 	[
 		source 3
-		target 4
-		label "15"
+		target 5
+		label "7"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 4
+		target 6
+		label "8"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 5
+		target 6
+		label "3"
 		graphics
 		[
 			fill "#000000"
