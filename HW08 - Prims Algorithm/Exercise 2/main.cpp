@@ -98,55 +98,40 @@ Parameter: A weighted, connected, undirected graph
 Returns: The mimimal spanning tree*/
 template <class T, class W> 
 WGraph<T, W> JarnikPrimAlgorithm(WGraph<T, W> &g) {
-  //Getting new MST to modify
   WGraph<T, W> MST;
-  //Declaring list vector to update after every iteration
-  vector<T> MSTVerticies;
-  //Boolean isInicident & hasCycle to help with conditional statement
-  bool isIncident, hasCycle;
-  //Getting sorted edge list
+  bool isIncident;
   vector<pair<T, pair<T, W>>> edges = g.getEdgeList();
+  vector<T> verticies = g.getVertexList();
+
   sort(edges.begin(), edges.end(),
        [](auto &a, auto &b) { return a.second.second < b.second.second; });
 
-  //Getting relevant counts
-  int GVertSize = g.size(); //Size of Verticies 
-  int GEdgeSize = edges.size(); //Size of edges
-
-  //If edges are empty, return empty MST
-  if(edges.empty()) { return MST; }
-
-  //Inserting the first vertex & first edge (makes it work)
-  vector<T> vertexes = g.getVertexList();
-  MST.addVertex(vertexes[0]);
+  //Insert the first edge & vertex
   MST.addEdge(edges[0]);
+  MST.addVertex(verticies[0]);
 
-  for(int i = 1; i < GVertSize-1; i++) {
-    cout << i << endl;
-    for (size_t j = 1; j < GEdgeSize; j++) {
-
+  int MSTedgecount = 0;
+  int gvertcount = g.size();
+  for (size_t i = 0; i < edges.size() && MSTedgecount < gvertcount - 1; i++) {
+    // If the edge is already in the graph move to the next one.
+    if (MST.getEdgePos(edges[i].first, edges[i].second.first) != -1)
+      continue;
+    //Testing for incidence
+    vector<T> MSTVerticies = MST.getVertexList();
+    isIncident = false;
+    //Checking if the vertex is in the vertex list
+    for(size_t v = 0; v < MSTVerticies.size() && !isIncident; v++) {
+      if(MSTVerticies[v] == edges[i].first || MSTVerticies[v] == edges[i].second.first) {
+        isIncident = true;
+      }
+    }
+    if(isIncident) {
       //Testing for cycles
       WGraph<T, W> TestMST = MST;
-      TestMST.addEdge(edges[j]);
-      hasCycle = detectCycles(TestMST);
-
-      //If there are no cycles
-      if (!hasCycle) {
-
-        //Testing for incidence
-        isIncident = false;
-        MSTVerticies = MST.getVertexList();
-        //Loop until there are no more verticies or until edge is no incident
-        for(int v = 0; v < MSTVerticies.size() && !isIncident; v++) {
-          //If there is incidence
-          if(MSTVerticies[v] == edges[j].first || 
-            MSTVerticies[v] == edges[j].second.first) {
-              //insert the edge and move to next iteration
-              MST.addEdge(edges[j]);
-              isIncident = true;
-          }
-        }
-
+      TestMST.addEdge(edges[i]);
+      if (!detectCycles(TestMST)) {
+        MST.addEdge(edges[i]);
+        MSTedgecount++;
       }
     }
   }
