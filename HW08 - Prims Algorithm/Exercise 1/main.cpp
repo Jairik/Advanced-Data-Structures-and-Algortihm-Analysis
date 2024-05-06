@@ -77,8 +77,14 @@ WGraph<T, W> JarnikPrimAlgorithm(WGraph<T, W> &g) {
     if (MST.getEdgePos(edges[i].first, edges[i].second.first) != -1)
       continue;
     //Testing for incidence
-    vector<T> MSTVertecies = MST.getEdgeList();
-    if(MSTVerticies.find(edges[i].first, edges[i].second.first)) {
+    vector<T> MSTVerticies = MST.getVertexList();
+    //Check for the first vertex
+    isIncident = (find(MSTVerticies.begin(), MSTVerticies.end(), edges[i].first) != MSTVerticies.end());
+    //If not found in the first, check the second vertex
+    if(!isIncident) { 
+      isIncident = (find(MSTVerticies.begin(), MSTVerticies.end(), edges[i].second.first) != MSTVerticies.end()); 
+    }
+    if(isIncident) {
       //Testing for cycles
       WGraph<T, W> TestMST = MST;
       TestMST.addEdge(edges[i]);
@@ -88,6 +94,7 @@ WGraph<T, W> JarnikPrimAlgorithm(WGraph<T, W> &g) {
       }
     }
   }
+  return MST;
 }
 
 
