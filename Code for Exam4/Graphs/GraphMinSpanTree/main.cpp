@@ -6,8 +6,7 @@
 
 using namespace std;
 
-template <class T, class W> WGraph<T, W> KruskalAlgorithm(WGraph<T, W> &);
-template <class T, class W> WGraph<T, W> JarnikPrimAlgorithm(WGraph<T, W> &); 
+template <class T, class W> WGraph<T, W> KruskalAlgorithm(WGraph<T, W> &G);
 template <class T, class W> bool detectCycles(WGraph<T, W> &);
 template <class T, class W>
 void CycleDFS(WGraph<T, W> &, vector<int> &, vector<T> &, int, int &,
@@ -30,66 +29,19 @@ int main() {
   G.addEdge('e', 'g', 8);
   G.addEdge('f', 'g', 3);
 
-  cout << "Sorted Vertex List: " << endl;
   G.sortVertexList();
   G.print();
+  G.saveGraphFileGML("G");
 
   div();
 
-  cout << "Minimal Spanning Tree - Kruskal Algorithm" << endl;
-  WGraph<char, int> MST1 = KruskalAlgorithm(G); //Getting minimal spanning tree
-  MST1.sortVertexList(); //Sorting for cleaner appearance
-  MST1.print(); //Printing to the console
-  MST1.saveGraphFileGML("Kruskal_Minimal_Spanning_Tree"); //Saving to graph file
-
-  div();
-
-  cout << "Minimal Spanning Tree - Jarnik Prim Algorithm" << endl;
-  WGraph<char, int> MST = JarnikPrimAlgorithm(G); //Getting minimal spanning tree
-  MST.sortVertexList(); //Sorting for cleaner appearance
-  MST.print(); //Printing to the console
-  MST.saveGraphFileGML("JarnikPrim_Minimal_Spanning_Tree"); //Saving to graph file
-
-  div();
-  cout << "GML Files Written" << endl << endl;
+  WGraph<char, int> MST = KruskalAlgorithm(G);
+  MST.sortVertexList();
+  MST.print();
+  MST.saveGraphFileGML("MST");
 
   return 0;
 }
-
-
-/* Jarnik-Prim Algorithm 
-Description: Finds the minimal spanning tree (MST) of a graph
-Parameter: A weighted, connected, undirected graph
-Returns: The mimimal spanning tree*/
-template <class T, class W> 
-WGraph<T, W> JarnikPrimAlgorithm(WGraph<T, W> &g) {
-  WGraph<T, W> MST;
-  bool isIncident;
-  vector<pair<T, pair<T, W>>> edges = g.getEdgeList();
-
-  sort(edges.begin(), edges.end(),
-       [](auto &a, auto &b) { return a.second.second < b.second.second; });
-
-  int MSTedgecount = 0;
-  int gvertcount = g.size();
-  for (size_t i = 0; i < edges.size() && MSTedgecount < gvertcount - 1; i++) {
-    // If the edge is already in the graph move to the next one.
-    if (MST.getEdgePos(edges[i].first, edges[i].second.first) != -1)
-      continue;
-    //Testing for incidence
-    vector<T> MSTVertecies = MST.getEdgeList();
-    if(MSTVerticies.find(edges[i].first, edges[i].second.first)) {
-      //Testing for cycles
-      WGraph<T, W> TestMST = MST;
-      TestMST.addEdge(edges[i]);
-      if (!detectCycles(TestMST)) {
-        MST.addEdge(edges[i]);
-        MSTedgecount++;
-      }
-    }
-  }
-}
-
 
 /*
 Kruskal's Algorithm for finding a minimal spanning tree for a weighted,

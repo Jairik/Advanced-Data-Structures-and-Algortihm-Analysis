@@ -121,11 +121,9 @@ WGraph<T, W> JarnikPrimAlgorithm(WGraph<T, W> &g) {
   MST.addVertex(vertexes[0]);
   MST.addEdge(edges[0]);
 
-  cout << GEdgeSize << ", Vertsize: " << GVertSize << endl;
   for(int i = 1; i < GVertSize-1; i++) {
-    cout << "Current i Iteration: " << i << endl;
+    cout << i << endl;
     for (size_t j = 1; j < GEdgeSize; j++) {
-      //cout << j << endl;
 
       //Testing for cycles
       WGraph<T, W> TestMST = MST;
@@ -145,8 +143,10 @@ WGraph<T, W> JarnikPrimAlgorithm(WGraph<T, W> &g) {
             MSTVerticies[v] == edges[j].second.first) {
               //insert the edge and move to next iteration
               MST.addEdge(edges[j]);
+              isIncident = true;
           }
         }
+
       }
     }
   }
