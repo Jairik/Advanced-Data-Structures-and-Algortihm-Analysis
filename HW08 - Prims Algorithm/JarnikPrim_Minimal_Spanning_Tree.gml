@@ -77,11 +77,57 @@ graph
 	node
 	[
 		id 3
-		label "f"
+		label "d"
 		graphics
 		[
 			x 100
 			y 100
+			w 80
+			h 40
+			customconfiguration "com.yworks.flowchart.start2"
+			fill "#E8EEF7"
+			fill2 "#B7C9E3"
+			outline "#000000"
+		]
+		LabelGraphics
+		[
+			text "d"
+			fontSize 12
+			fontName "Dialog"
+			model "null"
+		]
+	]
+	node
+	[
+		id 4
+		label "e"
+		graphics
+		[
+			x 0
+			y 200
+			w 80
+			h 40
+			customconfiguration "com.yworks.flowchart.start2"
+			fill "#E8EEF7"
+			fill2 "#B7C9E3"
+			outline "#000000"
+		]
+		LabelGraphics
+		[
+			text "e"
+			fontSize 12
+			fontName "Dialog"
+			model "null"
+		]
+	]
+	node
+	[
+		id 5
+		label "f"
+		graphics
+		[
+			x 100
+			y 200
 			w 80
 			h 40
 			customconfiguration "com.yworks.flowchart.start2"
@@ -99,12 +145,12 @@ graph
 	]
 	node
 	[
-		id 4
+		id 6
 		label "g"
 		graphics
 		[
 			x 0
-			y 200
+			y 300
 			w 80
 			h 40
 			customconfiguration "com.yworks.flowchart.start2"
@@ -142,8 +188,38 @@ graph
 	]
 	edge
 	[
+		source 2
+		target 5
+		label "12"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
 		source 3
-		target 4
+		target 5
+		label "7"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 4
+		target 6
+		label "8"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 5
+		target 6
 		label "3"
 		graphics
 		[

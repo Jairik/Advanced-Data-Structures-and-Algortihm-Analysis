@@ -51,7 +51,7 @@ int main() {
   MST.saveGraphFileGML("JarnikPrim_Minimal_Spanning_Tree"); //Saving to graph file
 
   div();
-  cout << "GML Files Written" << endl;
+  cout << "GML Files Written" << endl << endl;
 
   return 0;
 }
@@ -82,34 +82,35 @@ WGraph<T, W> JarnikPrimAlgorithm(WGraph<T, W> &g) {
   //If edges are empty, return empty MST
   if(edges.empty()) { return MST; }
 
-  //Inserting the first edge 
+  //Inserting the first vertex & first edge (makes it work)
+  vector<T> vertexes = g.getVertexList();
+  MST.addVertex(vertexes[0]);
   MST.addEdge(edges[0]);
 
   for(int i = 1; i < GVertSize-1; i++) {
     for (size_t j = 1; j < GEdgeSize; j++) {
-      // If the edge is already in the graph move to the next one.
-      if (MST.getEdgePos(edges[j].first, edges[j].second.first) != -1)
-        continue;
 
       //Testing for cycles
       WGraph<T, W> TestMST = MST;
-      TestMST.addEdge(edges[i]);
+      TestMST.addEdge(edges[j]);
       hasCycle = detectCycles(TestMST);
 
-      //Testing for incidence
-      isIncident = false;
-      MSTVerticies = MST.getVertexList();
-      for(int v = 0; v < MSTVerticies.size() && !isIncident; v++) {
-        if(MSTVerticies[v] == edges[j].first || 
-           MSTVerticies[v] == edges[j].second.first) {
-            isIncident = true;
-           }
-      }
+      //If there are no cycles
+      if (!hasCycle) {
 
-      //If there are no cycles and the is incident to the tree, add edge
-      if (!hasCycle && isIncident) {
-        MST.addEdge(edges[i]);
-        MSTedgecount++;
+        //Testing for incidence
+        isIncident = false;
+        MSTVerticies = MST.getVertexList();
+        //Loop until there are no more verticies or until edge is no incident
+        for(int v = 0; v < MSTVerticies.size() && !isIncident; v++) {
+          //If there is incidence
+          if(MSTVerticies[v] == edges[j].first || 
+            MSTVerticies[v] == edges[j].second.first) {
+              //insert the edge and move to next iteration
+              MST.addEdge(edges[j]);
+          }
+        }
+
       }
     }
   }
