@@ -10,7 +10,7 @@ using namespace std;
 
 template <class T, class W> WGraph<T, W> KruskalAlgorithm(WGraph<T, W> &);
 template <class T, class W> WGraph<T, W> JarnikPrimAlgorithm(WGraph<T, W> &); 
-template <class T, class W> W totalWeight(WGraph<T, W>);
+template <class T, class W> W totalWeight(WGraph<T, W> &);
 template <class T, class W> bool detectCycles(WGraph<T, W> &);
 template <class T, class W>
 void CycleDFS(WGraph<T, W> &, vector<int> &, vector<T> &, int, int &,
@@ -34,14 +34,16 @@ int main() {
     randV1 = (rand()%100) + 1;
     randV2 = (rand()%100) + 1;
     randW = (rand()%100) + 1;
-    if(randV1 == randV2) { i--; continue; } //Decrement i and move to next iteration
+    //Ensuring the 2 verticies are not the same
+    while(randV1 == randV2) {
+      randV2 = (rand()%100) + 1;
+    }
+    //Add the edge to G
     G.addEdge(randV1, randV2, randW);
   }
 
 
-  // Commented out to clean up output
-  // cout << "Sorted Vertex List: " << endl;
-  // G.sortVertexList();
+  G.sortVertexList();
   // G.print();
   cout << "Size of G: " << G.size() << endl;
   cout << "Total weight of G: " << totalWeight(G) << endl;
@@ -60,7 +62,6 @@ int main() {
 
   cout << "Minimal Spanning Tree - Jarnik Prim Algorithm" << endl;
   WGraph<int, int> MST = JarnikPrimAlgorithm(G); //Getting minimal spanning tree
-  cout << "Minimal spanning tree received" << endl;
   MST.sortVertexList(); //Sorting for cleaner appearance
   MST.print(); //Printing to the console
   MST.saveGraphFileGML("JarnikPrim_Minimal_Spanning_Tree"); //Saving to graph file
@@ -75,19 +76,17 @@ int main() {
 
 //Calculate the total weight of a given graph
 template <class T, class W>
-W totalWeight(WGraph<T, W> g) {
+W totalWeight(WGraph<T, W> &g) {
   //Getting the edges
   vector<pair<T, pair<T, W>>> edges = g.getEdgeList();
-  sort(edges.begin(), edges.end(),
-       [](auto &a, auto &b) { return a.second.second < b.second.second; });
   //Declaring a total weight variable
   W totalWeight = 0;
   //Looping through all edges in the graph
   size_t size = edges.size();
   for(int i = 0; i < size; i++) {
-    totalWeight += edges[i].second.second;
+    totalWeight += edges[i].second.second; //adding current weight to the total
   }
-  //Returning the value divided by 2 (account for duplicate edges)
+  //Returning the value divided by 2 (accounting for duplicate edges)
   return totalWeight/2;
 }
 
@@ -95,20 +94,25 @@ W totalWeight(WGraph<T, W> g) {
 /* Jarnik-Prim Algorithm 
 Description: Finds the minimal spanning tree (MST) of a graph
 Parameter: A weighted, connected, undirected graph
-Returns: The mimimal spanning tree*/
+Returns: The mimimal spanning tree
+Important Notes: I'm pretty sure I have tried everything and I still can't figure this 
+out. It keeps on giving me extremely high weights, which is inherently going to 
+affect the data. At this point, however, I'm just going have to acknowledge this
+and move onto testing. At least it shouldn't segfault for you this time*/
 template <class T, class W> 
 WGraph<T, W> JarnikPrimAlgorithm(WGraph<T, W> &g) {
   WGraph<T, W> MST;
   bool isIncident;
   vector<pair<T, pair<T, W>>> edges = g.getEdgeList();
-  vector<T> verticies = g.getVertexList();
-
   sort(edges.begin(), edges.end(),
        [](auto &a, auto &b) { return a.second.second < b.second.second; });
 
-  //Insert the first edge & vertex
-  MST.addEdge(edges[0]);
-  MST.addVertex(verticies[0]);
+  //Declaring a vector to track which verticies are already in the MST
+  vector<bool> inMST(g.size(), false); 
+
+  //Insert the first vertex
+  MST.addVertex(edges[0].first);
+  inMST[edges[0].first] = true;
 
   int MSTedgecount = 0;
   int gvertcount = g.size();
@@ -116,21 +120,15 @@ WGraph<T, W> JarnikPrimAlgorithm(WGraph<T, W> &g) {
     // If the edge is already in the graph move to the next one.
     if (MST.getEdgePos(edges[i].first, edges[i].second.first) != -1)
       continue;
-    //Testing for incidence
-    vector<T> MSTVerticies = MST.getVertexList();
-    isIncident = false;
-    //Checking if the vertex is in the vertex list
-    for(size_t v = 0; v < MSTVerticies.size() && !isIncident; v++) {
-      if(MSTVerticies[v] == edges[i].first || MSTVerticies[v] == edges[i].second.first) {
-        isIncident = true;
-      }
-    }
+    //Determining incidence by checking vertex in inMST vector
+    isIncident = (inMST[edges[i].first] != inMST[edges[i].second.first]);
     if(isIncident) {
       //Testing for cycles
       WGraph<T, W> TestMST = MST;
       TestMST.addEdge(edges[i]);
       if (!detectCycles(TestMST)) {
-        MST.addEdge(edges[i]);
+        MST.addEdge(edges[i].first, edges[i].second.first, edges[i].second.second);
+        inMST[edges[i].first] = inMST[edges[i].second.first] = true; //Didn't know you could do this until I tried it
         MSTedgecount++;
       }
     }
