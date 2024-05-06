@@ -51,7 +51,7 @@ int main() {
   MST.saveGraphFileGML("JarnikPrim_Minimal_Spanning_Tree"); //Saving to graph file
 
   div();
-  cout << "GML Files Written" << endl << endl;
+  cout << "--- GML Files Written ---" << endl;
 
   return 0;
 }
@@ -66,9 +66,14 @@ WGraph<T, W> JarnikPrimAlgorithm(WGraph<T, W> &g) {
   WGraph<T, W> MST;
   bool isIncident;
   vector<pair<T, pair<T, W>>> edges = g.getEdgeList();
+  vector<T> verticies = g.getVertexList();
 
   sort(edges.begin(), edges.end(),
        [](auto &a, auto &b) { return a.second.second < b.second.second; });
+
+  //Insert the first edge & vertex
+  MST.addEdge(edges[0]);
+  MST.addVertex(verticies[0]);
 
   int MSTedgecount = 0;
   int gvertcount = g.size();
@@ -78,11 +83,12 @@ WGraph<T, W> JarnikPrimAlgorithm(WGraph<T, W> &g) {
       continue;
     //Testing for incidence
     vector<T> MSTVerticies = MST.getVertexList();
-    //Check for the first vertex
-    isIncident = (find(MSTVerticies.begin(), MSTVerticies.end(), edges[i].first) != MSTVerticies.end());
-    //If not found in the first, check the second vertex
-    if(!isIncident) { 
-      isIncident = (find(MSTVerticies.begin(), MSTVerticies.end(), edges[i].second.first) != MSTVerticies.end()); 
+    isIncident = false;
+    //Checking if the vertex is in the vertex list
+    for(size_t v = 0; v < MSTVerticies.size() && !isIncident; v++) {
+      if(MSTVerticies[v] == edges[i].first || MSTVerticies[v] == edges[i].second.first) {
+        isIncident = true;
+      }
     }
     if(isIncident) {
       //Testing for cycles
