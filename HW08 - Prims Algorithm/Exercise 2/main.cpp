@@ -1,4 +1,6 @@
 #include <algorithm>
+#include <cstdlib>
+#include <ctime>
 #include <iostream>
 #include <vector>
 
@@ -8,6 +10,7 @@ using namespace std;
 
 template <class T, class W> WGraph<T, W> KruskalAlgorithm(WGraph<T, W> &);
 template <class T, class W> WGraph<T, W> JarnikPrimAlgorithm(WGraph<T, W> &); 
+template <class T, class W> W totalWeight(WGraph<T, W>);
 template <class T, class W> bool detectCycles(WGraph<T, W> &);
 template <class T, class W>
 void CycleDFS(WGraph<T, W> &, vector<int> &, vector<T> &, int, int &,
@@ -16,44 +19,76 @@ void CycleDFS(WGraph<T, W> &, vector<int> &, vector<T> &, int, int &,
 void div() { cout << "\n---------------------------------\n\n"; }
 
 int main() {
-  // An undirected connected weighted graph.
-  WGraph<char, int> G;
+  //An undirected connected weighted graph.
+  WGraph<int, int> G;
+  //Setting iterations size
+  const int NUMOFITERATIONS = 10000;
+  //Seeding random number generator
+  srand(time(0));
+  int randV1, randV2, randW; //Making variables
+  bool sameV;
 
-  G.addEdge('a', 'b', 6);
-  G.addEdge('a', 'c', 5);
-  G.addEdge('b', 'c', 9);
-  G.addEdge('b', 'e', 13);
-  G.addEdge('c', 'd', 16);
-  G.addEdge('c', 'f', 12);
-  G.addEdge('d', 'e', 15);
-  G.addEdge('d', 'f', 7);
-  G.addEdge('e', 'g', 8);
-  G.addEdge('f', 'g', 3);
+  //Inserting NUMOFITERATIONS edges into G
+  for(int i = 0; i < NUMOFITERATIONS; i++) {
+    //Getting random numbers
+    randV1 = (rand()%100) + 1;
+    randV2 = (rand()%100) + 1;
+    randW = (rand()%100) + 1;
+    if(randV1 == randV2) { i--; continue; } //Decrement i and move to next iteration
+    G.addEdge(randV1, randV2, randW);
+  }
 
-  cout << "Sorted Vertex List: " << endl;
-  G.sortVertexList();
-  G.print();
+
+  // Commented out to clean up output
+  // cout << "Sorted Vertex List: " << endl;
+  // G.sortVertexList();
+  // G.print();
+  cout << "Size of G: " << G.size() << endl;
+  cout << "Total weight of G: " << totalWeight(G) << endl;
 
   div();
 
   cout << "Minimal Spanning Tree - Kruskal Algorithm" << endl;
-  WGraph<char, int> MST1 = KruskalAlgorithm(G); //Getting minimal spanning tree
+  WGraph<int, int> MST1 = KruskalAlgorithm(G); //Getting minimal spanning tree
   MST1.sortVertexList(); //Sorting for cleaner appearance
   MST1.print(); //Printing to the console
   MST1.saveGraphFileGML("Kruskal_Minimal_Spanning_Tree"); //Saving to graph file
+  cout << "Size of Kruskal's MST: " << MST1.size() << endl;
+  cout << "Total weight of Kruskal's MST: " << totalWeight(MST1) << endl;
 
   div();
 
   cout << "Minimal Spanning Tree - Jarnik Prim Algorithm" << endl;
-  WGraph<char, int> MST = JarnikPrimAlgorithm(G); //Getting minimal spanning tree
+  WGraph<int, int> MST = JarnikPrimAlgorithm(G); //Getting minimal spanning tree
+  cout << "Minimal spanning tree received" << endl;
   MST.sortVertexList(); //Sorting for cleaner appearance
   MST.print(); //Printing to the console
   MST.saveGraphFileGML("JarnikPrim_Minimal_Spanning_Tree"); //Saving to graph file
+  cout << "Size of Jarnik Prim's MST: " << MST.size() << endl;
+  cout << "Total weight of Jarnik Prim's MST: " << totalWeight(MST) << endl;
 
   div();
   cout << "GML Files Written" << endl << endl;
 
   return 0;
+}
+
+//Calculate the total weight of a given graph
+template <class T, class W>
+W totalWeight(WGraph<T, W> g) {
+  //Getting the edges
+  vector<pair<T, pair<T, W>>> edges = g.getEdgeList();
+  sort(edges.begin(), edges.end(),
+       [](auto &a, auto &b) { return a.second.second < b.second.second; });
+  //Declaring a total weight variable
+  W totalWeight = 0;
+  //Looping through all edges in the graph
+  size_t size = edges.size();
+  for(int i = 0; i < size; i++) {
+    totalWeight += edges[i].second.second;
+  }
+  //Returning the value divided by 2 (account for duplicate edges)
+  return totalWeight/2;
 }
 
 
@@ -75,7 +110,6 @@ WGraph<T, W> JarnikPrimAlgorithm(WGraph<T, W> &g) {
        [](auto &a, auto &b) { return a.second.second < b.second.second; });
 
   //Getting relevant counts
-  int MSTedgecount = 0; //Counter for edges in MST
   int GVertSize = g.size(); //Size of Verticies 
   int GEdgeSize = edges.size(); //Size of edges
 
@@ -87,8 +121,11 @@ WGraph<T, W> JarnikPrimAlgorithm(WGraph<T, W> &g) {
   MST.addVertex(vertexes[0]);
   MST.addEdge(edges[0]);
 
+  cout << GEdgeSize << ", Vertsize: " << GVertSize << endl;
   for(int i = 1; i < GVertSize-1; i++) {
+    cout << "Current i Iteration: " << i << endl;
     for (size_t j = 1; j < GEdgeSize; j++) {
+      //cout << j << endl;
 
       //Testing for cycles
       WGraph<T, W> TestMST = MST;
@@ -110,7 +147,6 @@ WGraph<T, W> JarnikPrimAlgorithm(WGraph<T, W> &g) {
               MST.addEdge(edges[j]);
           }
         }
-
       }
     }
   }

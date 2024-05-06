@@ -6,7 +6,7 @@ OBJS = main.o
 $(PROG) : $(OBJS)
 	$(CC) -o $(PROG) $(OBJS)
 
-main.o : main.cpp Graph.h WGraph.h
+main.o : main.cpp WGraph.h
 	$(CC) $(CPPFLAGS) -c main.cpp
 
 clean:
