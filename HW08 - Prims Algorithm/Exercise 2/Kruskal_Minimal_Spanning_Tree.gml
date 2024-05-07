@@ -2308,686 +2308,6 @@ graph
 	edge
 	[
 		source 0
-		target 50
-		label "3"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 1
-		target 30
-		label "2"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 2
-		target 17
-		label "3"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 3
-		target 28
-		label "1"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 3
-		target 14
-		label "2"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 3
-		target 13
-		label "2"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 4
-		target 60
-		label "3"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 4
-		target 44
-		label "4"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 5
-		target 50
-		label "2"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 6
-		target 38
-		label "1"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 6
-		target 97
-		label "3"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 6
-		target 40
-		label "6"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 7
-		target 67
-		label "1"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 8
-		target 16
-		label "1"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 8
-		target 33
-		label "1"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 8
-		target 51
-		label "2"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 9
-		target 95
-		label "1"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 9
-		target 49
-		label "4"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 10
-		target 80
-		label "5"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 11
-		target 18
-		label "1"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 11
-		target 52
-		label "1"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 11
-		target 66
-		label "2"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 11
-		target 15
-		label "2"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 12
-		target 53
-		label "1"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 12
-		target 14
-		label "1"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 13
-		target 38
-		label "2"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 15
-		target 59
-		label "1"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 16
-		target 80
-		label "2"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 17
-		target 30
-		label "3"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 18
-		target 55
-		label "1"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 18
-		target 91
-		label "1"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 19
-		target 41
-		label "1"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 19
-		target 92
-		label "3"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 19
-		target 21
-		label "3"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 20
-		target 61
-		label "1"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 20
-		target 65
-		label "2"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 21
-		target 70
-		label "6"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 22
-		target 65
-		label "4"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 23
-		target 25
-		label "1"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 23
-		target 29
-		label "2"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 24
-		target 93
-		label "3"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 25
-		target 50
-		label "2"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 26
-		target 60
-		label "2"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 27
-		target 89
-		label "1"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 28
-		target 91
-		label "2"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 29
-		target 94
-		label "2"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 29
-		target 41
-		label "3"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 29
-		target 62
-		label "4"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 30
-		target 55
-		label "4"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 31
-		target 93
-		label "1"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 31
-		target 85
-		label "1"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 31
-		target 95
-		label "1"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 31
-		target 68
-		label "2"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 32
-		target 61
-		label "1"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 34
-		target 37
-		label "1"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 35
-		target 85
-		label "1"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 35
-		target 86
-		label "1"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 35
-		target 52
-		label "2"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 35
-		target 89
-		label "3"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 36
-		target 71
-		label "1"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 36
-		target 82
-		label "2"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 37
-		target 61
-		label "2"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 37
-		target 79
-		label "2"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 38
-		target 46
-		label "1"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 39
-		target 83
-		label "3"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 41
-		target 66
-		label "1"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 42
-		target 61
-		label "1"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 43
-		target 74
-		label "4"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 45
 		target 73
 		label "1"
 		graphics
@@ -2997,58 +2317,8 @@ graph
 	]
 	edge
 	[
-		source 45
-		target 52
-		label "2"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 45
-		target 57
-		label "3"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 46
-		target 88
-		label "3"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 47
-		target 96
-		label "3"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 48
-		target 83
-		label "3"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 51
-		target 81
+		source 0
+		target 20
 		label "1"
 		graphics
 		[
@@ -3057,18 +2327,8 @@ graph
 	]
 	edge
 	[
-		source 51
-		target 98
-		label "2"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 51
-		target 69
+		source 0
+		target 14
 		label "3"
 		graphics
 		[
@@ -3077,28 +2337,18 @@ graph
 	]
 	edge
 	[
-		source 54
+		source 1
+		target 75
+		label "2"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 2
 		target 68
-		label "7"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 55
-		target 74
-		label "4"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 56
-		target 99
 		label "2"
 		graphics
 		[
@@ -3107,28 +2357,8 @@ graph
 	]
 	edge
 	[
-		source 58
-		target 91
-		label "2"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 59
-		target 71
-		label "1"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 59
-		target 75
+		source 2
+		target 93
 		label "3"
 		graphics
 		[
@@ -3137,18 +2367,8 @@ graph
 	]
 	edge
 	[
-		source 60
-		target 76
-		label "1"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 60
-		target 63
+		source 3
+		target 97
 		label "2"
 		graphics
 		[
@@ -3157,58 +2377,8 @@ graph
 	]
 	edge
 	[
-		source 63
-		target 65
-		label "2"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 63
-		target 82
-		label "2"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 64
-		target 98
-		label "2"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 64
-		target 86
-		label "2"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 64
-		target 67
-		label "2"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 64
-		target 77
+		source 4
+		target 12
 		label "3"
 		graphics
 		[
@@ -3217,8 +2387,8 @@ graph
 	]
 	edge
 	[
-		source 72
-		target 75
+		source 5
+		target 28
 		label "2"
 		graphics
 		[
@@ -3227,8 +2397,18 @@ graph
 	]
 	edge
 	[
-		source 77
-		target 96
+		source 6
+		target 88
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 6
+		target 47
 		label "2"
 		graphics
 		[
@@ -3237,18 +2417,8 @@ graph
 	]
 	edge
 	[
-		source 78
-		target 89
-		label "5"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 79
-		target 84
+		source 6
+		target 38
 		label "2"
 		graphics
 		[
@@ -3257,17 +2427,7 @@ graph
 	]
 	edge
 	[
-		source 80
-		target 90
-		label "5"
-		graphics
-		[
-			fill "#000000"
-		]
-	]
-	edge
-	[
-		source 83
+		source 7
 		target 87
 		label "1"
 		graphics
@@ -3277,8 +2437,98 @@ graph
 	]
 	edge
 	[
-		source 87
-		target 93
+		source 7
+		target 63
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 7
+		target 54
+		label "3"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 8
+		target 63
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 8
+		target 96
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 8
+		target 60
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 9
+		target 99
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 10
+		target 42
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 10
+		target 89
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 10
+		target 90
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 10
+		target 76
 		label "2"
 		graphics
 		[
@@ -3287,9 +2537,759 @@ graph
 	]
 	edge
 	[
-		source 96
+		source 11
+		target 63
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 12
+		target 59
+		label "3"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 13
+		target 88
+		label "2"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 15
+		target 68
+		label "2"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 16
+		target 98
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 16
+		target 19
+		label "2"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 16
+		target 29
+		label "4"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 17
+		target 80
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 18
+		target 85
+		label "3"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 19
+		target 82
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 19
+		target 64
+		label "2"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 20
+		target 78
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 20
+		target 57
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 20
+		target 62
+		label "3"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 21
+		target 92
+		label "2"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 22
+		target 43
+		label "2"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 23
+		target 47
+		label "2"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 24
+		target 96
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 25
+		target 51
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 25
+		target 97
+		label "2"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 26
+		target 33
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 26
+		target 57
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 27
+		target 43
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 28
+		target 50
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 30
+		target 60
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 31
+		target 97
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 32
+		target 64
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 33
+		target 52
+		label "2"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 34
+		target 53
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 34
+		target 65
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 34
+		target 73
+		label "2"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 34
+		target 91
+		label "2"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 35
+		target 75
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 35
+		target 59
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 35
+		target 86
+		label "3"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 36
+		target 67
+		label "3"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 37
+		target 57
+		label "2"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 38
+		target 81
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 39
+		target 73
+		label "2"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 40
+		target 97
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 40
+		target 73
+		label "2"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 40
+		target 69
+		label "2"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 41
 		target 99
 		label "2"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 41
+		target 70
+		label "4"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 42
+		target 46
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 43
+		target 63
+		label "2"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 44
+		target 74
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 44
+		target 88
+		label "4"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 45
+		target 93
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 45
+		target 89
+		label "2"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 48
+		target 61
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 49
+		target 98
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 50
+		target 61
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 52
+		target 83
+		label "2"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 55
+		target 61
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 56
+		target 91
+		label "6"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 58
+		target 89
+		label "3"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 59
+		target 80
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 60
+		target 95
+		label "5"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 61
+		target 87
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 64
+		target 90
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 65
+		target 88
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 66
+		target 79
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 66
+		target 98
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 67
+		target 75
+		label "3"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 69
+		target 94
+		label "4"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 71
+		target 97
+		label "2"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 71
+		target 96
+		label "2"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 72
+		target 76
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 72
+		target 80
+		label "2"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 73
+		target 90
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 77
+		target 99
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 77
+		target 88
+		label "2"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 84
+		target 89
+		label "1"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 84
+		target 85
+		label "2"
+		graphics
+		[
+			fill "#000000"
+		]
+	]
+	edge
+	[
+		source 92
+		target 97
+		label "3"
 		graphics
 		[
 			fill "#000000"

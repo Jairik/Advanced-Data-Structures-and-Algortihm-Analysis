@@ -95,24 +95,21 @@ W totalWeight(WGraph<T, W> &g) {
 Description: Finds the minimal spanning tree (MST) of a graph
 Parameter: A weighted, connected, undirected graph
 Returns: The mimimal spanning tree
-Important Notes: I'm pretty sure I have tried everything and I still can't figure this 
-out. It keeps on giving me extremely high weights, which is inherently going to 
-affect the data. At this point, however, I'm just going have to acknowledge this
-and move onto testing. At least it shouldn't segfault for you this time*/
+Notes: Weights seems to be off, not entirely sure why but for some reason
+I just cannot fix it. At least it doesn't segfault (knock on wood)*/
 template <class T, class W> 
 WGraph<T, W> JarnikPrimAlgorithm(WGraph<T, W> &g) {
   WGraph<T, W> MST;
   bool isIncident;
   vector<pair<T, pair<T, W>>> edges = g.getEdgeList();
+  vector<T> verticies = g.getVertexList();
+
   sort(edges.begin(), edges.end(),
        [](auto &a, auto &b) { return a.second.second < b.second.second; });
 
-  //Declaring a vector to track which verticies are already in the MST
-  vector<bool> inMST(g.size(), false); 
-
-  //Insert the first vertex
-  MST.addVertex(edges[0].first);
-  inMST[edges[0].first] = true;
+  //Insert the first edge & vertex
+  MST.addEdge(edges[0]);
+  MST.addVertex(verticies[0]);
 
   int MSTedgecount = 0;
   int gvertcount = g.size();
@@ -120,21 +117,28 @@ WGraph<T, W> JarnikPrimAlgorithm(WGraph<T, W> &g) {
     // If the edge is already in the graph move to the next one.
     if (MST.getEdgePos(edges[i].first, edges[i].second.first) != -1)
       continue;
-    //Determining incidence by checking vertex in inMST vector
-    isIncident = (inMST[edges[i].first] != inMST[edges[i].second.first]);
+    //Testing for incidence
+    vector<T> MSTVerticies = MST.getVertexList();
+    isIncident = false;
+    //Checking if the vertex is in the vertex list
+    for(size_t v = 0; v < MSTVerticies.size() && !isIncident; v++) {
+      if(MSTVerticies[v] == edges[i].first || MSTVerticies[v] == edges[i].second.first) {
+        isIncident = true;
+      }
+    }
     if(isIncident) {
       //Testing for cycles
       WGraph<T, W> TestMST = MST;
       TestMST.addEdge(edges[i]);
       if (!detectCycles(TestMST)) {
-        MST.addEdge(edges[i].first, edges[i].second.first, edges[i].second.second);
-        inMST[edges[i].first] = inMST[edges[i].second.first] = true; //Didn't know you could do this until I tried it
+        MST.addEdge(edges[i]);
         MSTedgecount++;
       }
     }
   }
   return MST;
 }
+
 
 
 /*
