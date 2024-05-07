@@ -103,7 +103,6 @@ WGraph<T, W> JarnikPrimAlgorithm(WGraph<T, W> &g) {
   return MST;
 }
 
-
 /*
 Kruskal's Algorithm for finding a minimal spanning tree for a weighted,
 connected, undirected graph.  The algorithm does not check that the graph is
