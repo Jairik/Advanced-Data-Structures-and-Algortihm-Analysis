@@ -7,6 +7,9 @@
 #include <chrono> 
 #include <iostream>
 #include <vector>
+#include <queue> //For copied implementation
+#include <map> //For copied implementation
+#include <climits> //For copied implementation
 
 #include "WGraph.h"
 
@@ -40,7 +43,7 @@ int main() {
   cin >> numOfVerticies;
 
   //inserting numOfIterations into the graph
-  for(int i = 1; i < numOfIterations-1; i++) {
+  for(int i = 0; i < numOfIterations-1; i++) {
     //Getting random numbers
     randV1 = (rand()%numOfVerticies) + 1;
     randV2 = (rand()%numOfVerticies) + 1;
@@ -59,6 +62,9 @@ int main() {
   if(!connected(G)) {
     cout << "Graph was not connected, ending program now";
     exit(0); //ending the program
+  }
+  else {
+	  cout << "Graph is connected!" << endl;
   }
 
   G.sortVertexList();
@@ -117,26 +123,24 @@ W totalWeight(WGraph<T, W> &g) {
   return totalWeight/2;
 }
 
-
 /* Jarnik-Prim Algorithm 
 Description: Finds the minimal spanning tree (MST) of a graph
 Parameter: A weighted, connected, undirected graph
 Returns: The mimimal spanning tree
-Notes: Screwed up algorithm, will likely not time correctly :( */
+Notes: Code is likely incorrect and will likely mess up timing results*/
 template <class T, class W> 
 WGraph<T, W> JarnikPrimAlgorithm(WGraph<T, W> &g) {
   WGraph<T, W> MST;
   bool isIncident;
   vector<pair<T, pair<T, W>>> edges = g.getEdgeList();
+  vector<T> verticies = g.getVertexList();
+
   sort(edges.begin(), edges.end(),
        [](auto &a, auto &b) { return a.second.second < b.second.second; });
 
-  //Declaring a vector to track which verticies are already in the MST
-  vector<bool> inMST(g.size(), false); 
-
-  //Insert the first vertex
-  MST.addVertex(edges[0].first);
-  inMST[edges[0].first] = true;
+  //Insert the first edge & vertex
+  MST.addEdge(edges[0]);
+  MST.addVertex(verticies[0]);
 
   int MSTedgecount = 0;
   int gvertcount = g.size();
@@ -144,15 +148,21 @@ WGraph<T, W> JarnikPrimAlgorithm(WGraph<T, W> &g) {
     // If the edge is already in the graph move to the next one.
     if (MST.getEdgePos(edges[i].first, edges[i].second.first) != -1)
       continue;
-    //Determining incidence by checking vertex in inMST vector
-    isIncident = (inMST[edges[i].first] != inMST[edges[i].second.first]);
+    //Testing for incidence
+    vector<T> MSTVerticies = MST.getVertexList();
+    isIncident = false;
+    //Checking if the vertex is in the vertex list
+    for(size_t v = 0; v < MSTVerticies.size() && !isIncident; v++) {
+      if(MSTVerticies[v] == edges[i].first || MSTVerticies[v] == edges[i].second.first) {
+        isIncident = true;
+      }
+    }
     if(isIncident) {
       //Testing for cycles
       WGraph<T, W> TestMST = MST;
       TestMST.addEdge(edges[i]);
       if (!detectCycles(TestMST)) {
-        MST.addEdge(edges[i].first, edges[i].second.first, edges[i].second.second);
-        inMST[edges[i].first] = inMST[edges[i].second.first] = true; //Didn't know you could do this until I tried it
+        MST.addEdge(edges[i]);
         MSTedgecount++;
       }
     }
