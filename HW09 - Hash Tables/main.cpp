@@ -1,0 +1,1 @@
+//Function that will do hash stuff
