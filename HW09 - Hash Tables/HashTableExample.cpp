@@ -4,6 +4,13 @@
 
 #include "HashTable.h"
 
+/*-----------------------------------------------------------------------------
+  Author: JJ McCauley (original file provided by Dr. Spickler)
+  Creation Date: 5/10/24
+  Description: Demo to showcase the new HashTable
+  Notes: Added a re-hashing of size 7 to mimic the expected output.
+-----------------------------------------------------------------------------*/
+
 using namespace std;
 
 int hf(int &val) { return val; }
@@ -11,7 +18,7 @@ int hf(int &val) { return val; }
 int main() {
   srand(time(0));
 
-  HashTable<int> table(23, hf, -1, -2);
+  HashTable<int> table(10, hf);
 
   table.insert(437543);
   table.insert(3284);
@@ -42,6 +49,14 @@ int main() {
   cout << table.find(3284) << endl;
   cout << table.find(123456) << endl;
   cout << table.find(1103) << endl;
+
+  /*----------------------------------
+    Added to mimic expected output 
+    ----------------------------------*/
+  cout << endl;
+  table.rehash(7);
+  table.print();
+  cout << endl;
 
   return 0;
 }
